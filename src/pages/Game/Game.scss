@@ -1,0 +1,46 @@
+@use "../../styles/partials/mixins" as *;
+
+.game {
+    display: flex;
+    flex-direction: column;
+
+    @include tablet {
+        flex-direction: row;
+    }
+
+    &__container {
+        flex: 1;
+    }
+    &__answers {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        align-items: center;
+        margin-top: 16px;
+    }
+
+    &__button {
+        width: 300px;
+        padding: 16px 32px;
+        background-color: gray;
+        border: none;
+        border-radius: 30px;
+        font-size: 1.1rem;
+    }
+
+    &__modal {
+        display: none;
+        
+    }
+
+    &__modal-button {
+        width: 300px;
+        padding: 16px 32px;
+        background-color: white;
+        color: black;
+        border: none;
+        border-radius: 30px;
+        font-size: 1.1rem;
+        margin-top: 16px;
+    }
+}

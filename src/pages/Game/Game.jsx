@@ -1,0 +1,233 @@
+import { useEffect, useState, useRef } from "react"
+import { Visualizer } from 'react-music-visualizer'
+import { PlaylistLeaderboard } from "../../components/PlaylistLeaderboard/PlaylistLeaderboard"
+import "./Game.scss"
+import { useParams, Navigate } from 'react-router-dom'
+import axios from "axios"
+
+
+export function Game({ token }) {
+
+    const { playlistId } = useParams()
+
+    //save all tracks from the playlist
+    const [playlistTracks, setPlaylistTracks] = useState(null)
+    //keep track of score
+    const [score, setScore] = useState(0)
+    //pick the first track. This is the current track that is the correct answer
+    const [currentTrack, setCurrentTrack] = useState(null)
+    //set the index of the current track. This keeps track of which track in the playlist we are currently at
+    const [currentTrackIndex, setCurrentTrackIndex] = useState(0)
+    //this is the list of indices that will be used to set the answers
+    const [answers, setAnswers] = useState()
+    const [gameOver, setGameOver] = useState(false)
+    const [buttonsDisabled, setDisabled] = useState(false)
+
+    const modalRef = useRef()
+
+
+    //get playlist tracks and set playlistTracks
+    useEffect(() => {
+        //get tracks from playlist
+        async function getPlaylistTracks(playlistId) {
+            try {
+                //create header with token
+                const config = {
+                    headers: { Authorization: `Bearer ${token}` }
+                }
+
+                //get tracks from spotify
+                let response = await axios.get("https://api.spotify.com/v1/playlists/" + playlistId, config)
+                //save tracks to state
+                setPlaylistTracks(response.data.tracks.items)
+                console.log(response.data)
+
+            } catch (err) {
+                console.error(err)
+            }
+        }
+
+        getPlaylistTracks(playlistId)
+
+    }, [])
+
+    function setupGame() {
+        //set current track
+        setCurrentTrack(playlistTracks[currentTrackIndex])
+        //get 3 other answers
+        pickThreeRandomTracks()
+
+        //set buttons to answers
+        setButtons()
+
+    }
+
+    //set buttons at random to the values of the 4 track titles
+    function setButtons() {
+        let trackIndices = pickThreeRandomTracks()
+        setAnswers(trackIndices)
+    }
+
+    //pick three other random songs from the playlist - make sure they are all unique
+    function pickThreeRandomTracks() {
+        //get the current tracks index
+        const trackIndices = [currentTrackIndex]
+        //continue adding to track index until 4 tracks are chosen
+        while (trackIndices.length < 4) {
+            let tmpIndex
+            //create a random number
+            do {
+                tmpIndex = Math.ceil(Math.random() * playlistTracks.length - 1)
+            }
+            //while tmpIndex is in index, keep generating new indexes
+            while (trackIndices.includes(tmpIndex))
+            trackIndices.push(tmpIndex)
+        }
+        //shuffle indices
+        for (let i = 0; i < 10; i++) {
+            let randomIndex = Math.floor(Math.random() * 4)
+            let randomSlice = trackIndices.splice(randomIndex, 1)
+            trackIndices.push(randomSlice[0])
+        }
+        return trackIndices
+    }
+
+    //setup game once tracks are present
+    useEffect(() => {
+        if (!playlistTracks) {
+            console.log("no tracks loaded yet")
+            return
+        }
+        console.log("tracks are loaded and ready to setup game")
+        setupGame()
+    }, [playlistTracks])
+
+    //create useEffect runs when answer submitted
+    useEffect(() => {
+
+        if (!playlistTracks) {
+            return
+        }
+
+        //hide modal
+        modalRef.current.style.display = "none"
+
+        function nextSong() {
+            //check that track has preview url
+            const nextTrack = playlistTracks[currentTrackIndex]
+            if (!nextTrack.track.preview_url) {
+                setCurrentTrackIndex(currentTrackIndex + 1)
+            }
+
+            //set the track
+            setCurrentTrack(playlistTracks[currentTrackIndex])
+
+            //set the button
+            setButtons()
+        }
+
+        nextSong()
+
+    }, [currentTrackIndex])
+
+
+    function handleAnswer(event, answer) {
+
+        const currentTrackName = currentTrack.track.name
+
+        //check if answer matches the current track
+        if (answer === currentTrackName) {
+            console.log("correct answer!!")
+            event.target.style.backgroundColor = "green"
+
+            //increment score
+            setScore(score + 1)
+
+            //TODO
+            //disable all buttons
+
+
+            //show modal with next button
+            modalRef.current.style.display = "block"
+
+        }
+        else {
+            console.log("incorrect answer")
+            event.target.style.backgroundColor = "red"
+            //TODO
+            //disable all buttons
+
+            //if no, game is over. show modal with game over, with button back to home page
+            setGameOver(true)
+            modalRef.current.style.display = "block"
+        }
+    }
+
+    function disableButtons(){
+        //loop over each ref and disable button
+        //option 1: hard code each ref and disable each one
+        //option 2: get elements with query selector and disable each one
+        //option 3: use state to reference disabled and use that in the button element conditionally
+        
+    }
+
+    function handleNext() {
+        if (!gameOver) {
+            //choose the next song
+            setCurrentTrackIndex(currentTrackIndex + 1)
+
+            //hide modal
+            modalRef.current.style.display = "none"
+
+            //enable buttons
+        }
+    }
+
+    function handlePlayAgain(){
+        //TODO 
+        //save score to backend
+        window.location.reload()
+    }
+
+    function handleGoHome(){
+        //TODO 
+        //save score to backend
+        console.log("going home");
+        window.history.back()
+    }
+
+    if (!playlistTracks || !answers || !currentTrack) {
+        return <h1>Loading</h1>
+    }
+
+    return (
+        <main className="game">
+            <section className="game__container">
+                <h3>Score: {score}</h3>
+                <div className="audio-player">
+                    <audio src={currentTrack.track.preview_url} autoPlay controls></audio>
+                </div>
+                <div className="game__answers">
+                    {/* display answer buttons using answers state */}
+                    {answers.map((answer, index) => {
+                        const trackName = playlistTracks[answer].track.name
+                        return (
+                            <button className="game__button"  key={playlistTracks[answer].track.id} onClick={(event) => handleAnswer(event, trackName)}>{trackName}</button>
+                        )
+                    })}
+                </div>
+                <div className="game__modal" ref={modalRef}>
+                    {!gameOver && <button className="game__modal-button" onClick={handleNext}>Next Song</button>}
+                    {gameOver &&
+                        <div className="game__end-options">
+                            <button className="game__modal-button" onClick={handlePlayAgain}>Play Again</button>
+                            <button className="game__modal-button" onClick={handleGoHome}>Go Home</button>
+                        </div>
+                    }
+                </div>
+            </section>
+            <PlaylistLeaderboard />
+
+        </main>
+    )
+}
