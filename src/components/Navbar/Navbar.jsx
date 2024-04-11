@@ -18,7 +18,7 @@ export function Navbar() {
                 </li>
 
                 <li className="navbar__item">
-                    <Link to={"/"} className="navbar__link">
+                    <Link to={"/leaderboards"} className="navbar__link">
                         <img className="navbar__icon" src={leaderboard} alt="leaderboard icon" />
                         <span className="navbar__text"> Leaderboards</span>
                     </Link>

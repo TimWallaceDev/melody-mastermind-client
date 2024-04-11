@@ -26,6 +26,10 @@
         border: none;
         border-radius: 30px;
         font-size: 1.1rem;
+
+        &--correct {
+            background-color: green;
+        }
     }
 
     &__modal {

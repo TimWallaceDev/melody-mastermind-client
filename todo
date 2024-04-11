@@ -1,0 +1,9 @@
+if previous answer happens to be selected for next round, remove green background
+make server send json and client accept json response for playlist scores
+
+add playlist image on game page
+STYLING
+
+get more songs if youre on the last song
+share on social button
+add account page where you can add friends (backend/frontend)

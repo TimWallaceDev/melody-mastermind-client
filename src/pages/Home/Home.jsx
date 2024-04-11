@@ -1,9 +1,7 @@
 import "./Home.scss"
-
 import { Playlist } from "../../components/Playlist/Playlist"
-
 import playlistsData from "../../data/playlists.json"
-console.log(playlistsData)
+import { UsernameModal } from "../../components/UsernameModal/UsernameModal"
 
 export function Home() {
 
@@ -17,7 +15,7 @@ export function Home() {
                 {playlistsData.map(playlist => <Playlist key={playlist.playlistId} playlist={playlist} />)}
 
             </div>
-
+            <UsernameModal/>
         </section>
     )
 }

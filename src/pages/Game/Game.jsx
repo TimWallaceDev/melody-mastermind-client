@@ -1,5 +1,4 @@
 import { useEffect, useState, useRef } from "react"
-import { Visualizer } from 'react-music-visualizer'
 import { PlaylistLeaderboard } from "../../components/PlaylistLeaderboard/PlaylistLeaderboard"
 import "./Game.scss"
 import { useParams, Navigate } from 'react-router-dom'
@@ -9,6 +8,8 @@ import axios from "axios"
 export function Game({ token }) {
 
     const { playlistId } = useParams()
+    //scores for the leaderboard
+    const [scores, setScores] = useState(null)
 
     //save all tracks from the playlist
     const [playlistTracks, setPlaylistTracks] = useState(null)
@@ -25,7 +26,6 @@ export function Game({ token }) {
 
     const modalRef = useRef()
 
-
     //get playlist tracks and set playlistTracks
     useEffect(() => {
         //get tracks from playlist
@@ -38,28 +38,37 @@ export function Game({ token }) {
 
                 //get tracks from spotify
                 let response = await axios.get("https://api.spotify.com/v1/playlists/" + playlistId, config)
+
                 //save tracks to state
                 setPlaylistTracks(response.data.tracks.items)
-                console.log(response.data)
 
             } catch (err) {
                 console.error(err)
             }
         }
+        async function getScores() {
+            // get scores
+            const response = await axios.get("http://localhost:8080/scores/" + playlistId)
+            const scores = response.data
+            console.log({ scores })
 
+            //save scores to state
+            setScores(scores)
+
+        }
+        getScores()
         getPlaylistTracks(playlistId)
 
     }, [])
 
     function setupGame() {
+        nextSong()
         //set current track
         setCurrentTrack(playlistTracks[currentTrackIndex])
         //get 3 other answers
         pickThreeRandomTracks()
-
         //set buttons to answers
         setButtons()
-
     }
 
     //set buttons at random to the values of the 4 track titles
@@ -95,16 +104,27 @@ export function Game({ token }) {
     //setup game once tracks are present
     useEffect(() => {
         if (!playlistTracks) {
-            console.log("no tracks loaded yet")
             return
         }
-        console.log("tracks are loaded and ready to setup game")
         setupGame()
     }, [playlistTracks])
 
+    function nextSong() {
+        //check that track has preview url
+        const nextTrack = playlistTracks[currentTrackIndex]
+        if (!nextTrack.track.preview_url) {
+            setCurrentTrackIndex(currentTrackIndex + 1)
+        }
+
+        //set the track
+        setCurrentTrack(playlistTracks[currentTrackIndex])
+
+        //set the button
+        setButtons()
+    }
+
     //create useEffect runs when answer submitted
     useEffect(() => {
-
         if (!playlistTracks) {
             return
         }
@@ -112,26 +132,12 @@ export function Game({ token }) {
         //hide modal
         modalRef.current.style.display = "none"
 
-        function nextSong() {
-            //check that track has preview url
-            const nextTrack = playlistTracks[currentTrackIndex]
-            if (!nextTrack.track.preview_url) {
-                setCurrentTrackIndex(currentTrackIndex + 1)
-            }
-
-            //set the track
-            setCurrentTrack(playlistTracks[currentTrackIndex])
-
-            //set the button
-            setButtons()
-        }
-
         nextSong()
 
     }, [currentTrackIndex])
 
-
-    function handleAnswer(event, answer) {
+    //handles answer submission
+    async function handleAnswer(event, answer) {
 
         const currentTrackName = currentTrack.track.name
 
@@ -143,8 +149,8 @@ export function Game({ token }) {
             //increment score
             setScore(score + 1)
 
-            //TODO
             //disable all buttons
+            setDisabled(true)
 
 
             //show modal with next button
@@ -153,24 +159,38 @@ export function Game({ token }) {
         }
         else {
             console.log("incorrect answer")
+            //set chosen answer to red
             event.target.style.backgroundColor = "red"
-            //TODO
+
+            //set correct answer to green
+
+
             //disable all buttons
+            setDisabled(true)
 
             //if no, game is over. show modal with game over, with button back to home page
             setGameOver(true)
             modalRef.current.style.display = "block"
+
+            //post score to scores
+            //username, score, playlistId, userid
+            const username = localStorage.getItem("username")
+            const params = { username, score, playlist_id: playlistId }
+            try {
+                const response = await axios.post("http://localhost:8080/scores", params)
+                // console.log("server score response:", response)
+                console.log("new score obj", response.data)
+
+                //TODO update leaderboard 
+                setScores([...scores, response.data])
+
+            } catch (err) {
+                console.log(err)
+            }
         }
     }
 
-    function disableButtons(){
-        //loop over each ref and disable button
-        //option 1: hard code each ref and disable each one
-        //option 2: get elements with query selector and disable each one
-        //option 3: use state to reference disabled and use that in the button element conditionally
-        
-    }
-
+    //sets up next question
     function handleNext() {
         if (!gameOver) {
             //choose the next song
@@ -180,19 +200,19 @@ export function Game({ token }) {
             modalRef.current.style.display = "none"
 
             //enable buttons
+            setDisabled(false)
+
+            //reset background color for all buttons
         }
     }
 
-    function handlePlayAgain(){
-        //TODO 
-        //save score to backend
+    //resets game to beginning
+    function handlePlayAgain() {
         window.location.reload()
     }
 
-    function handleGoHome(){
-        //TODO 
-        //save score to backend
-        console.log("going home");
+    //takes user to home page
+    function handleGoHome() {
         window.history.back()
     }
 
@@ -209,10 +229,10 @@ export function Game({ token }) {
                 </div>
                 <div className="game__answers">
                     {/* display answer buttons using answers state */}
-                    {answers.map((answer, index) => {
+                    {answers.map(answer => {
                         const trackName = playlistTracks[answer].track.name
                         return (
-                            <button className="game__button"  key={playlistTracks[answer].track.id} onClick={(event) => handleAnswer(event, trackName)}>{trackName}</button>
+                            <button className={` ${gameOver && trackName === currentTrack.track.name ? "game__button game__button--correct" : " game__button"}`} disabled={buttonsDisabled} key={playlistTracks[answer].track.id} onClick={(event) => handleAnswer(event, trackName)}>{trackName}</button>
                         )
                     })}
                 </div>
@@ -226,7 +246,7 @@ export function Game({ token }) {
                     }
                 </div>
             </section>
-            <PlaylistLeaderboard />
+            <PlaylistLeaderboard scores={scores} />
 
         </main>
     )
