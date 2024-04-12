@@ -2,12 +2,12 @@ import { useRef, useState, useEffect } from "react"
 import "./UsernameModal.scss"
 import axios from 'axios'
 
-
 export function UsernameModal() {
 
     const [username, setUsername] = useState()
     const [errorMessage, setErrorMessage] = useState("")
     const modalRef = useRef()
+    const messageRef = useRef()
 
     useEffect(() => {
         function checkForUsername(){
@@ -42,9 +42,11 @@ export function UsernameModal() {
         //display message
         if (isAvailable){
             setErrorMessage("Username available!")
+            messageRef.current.style.color = "green"
         }
         else {
             setErrorMessage("username already taken. Please choose another")
+            messageRef.current.style.color = "red"
         }
     }
 
@@ -53,6 +55,7 @@ export function UsernameModal() {
         //make sure username has a least one character
         if (!username){
             setErrorMessage("Please enter a username")
+            messageRef.current.style.color = "red"
             return
         }
         //check username availability
@@ -69,6 +72,8 @@ export function UsernameModal() {
         }
         else {
             setErrorMessage("username is taken")
+            messageRef.current.style.color = "red"
+            return
         }
 
         //set username in localstorage
@@ -84,7 +89,7 @@ export function UsernameModal() {
         <section className="username-modal__wrapper" ref={modalRef}>
             <div className="username-modal">
                 <h2 className="username-modal__heading">Choose A Username</h2>
-                <span className="username-modal__message">{errorMessage}</span>
+                <span className="username-modal__message" ref={messageRef}>{errorMessage}</span>
                 <label className="username-modal__label">Username</label>
                 <input className="username-modal__input" type="text" placeholder="Username" onChange={handleChange} value={username}></input>
                 <button className="username-modal__submit" onClick={handleUsername} >Choose Username</button>

@@ -3,6 +3,9 @@ import { PlaylistLeaderboard } from "../../components/PlaylistLeaderboard/Playli
 import "./Game.scss"
 import { useParams, Navigate } from 'react-router-dom'
 import axios from "axios"
+import { v4 as uuid } from "uuid"
+import { MusicVisualizer } from "../../components/MusicVisualizer/MusicVisualizer"
+import testAudio from "../../assets/audio/05 Just the Two of Us.wav"
 
 
 export function Game({ token }) {
@@ -10,9 +13,12 @@ export function Game({ token }) {
     const { playlistId } = useParams()
     //scores for the leaderboard
     const [scores, setScores] = useState(null)
+    const [currentScore, setCurrentScore] = useState(null)
 
     //save all tracks from the playlist
     const [playlistTracks, setPlaylistTracks] = useState(null)
+    const [playlistImg, setPlaylistImg] = useState(null)
+    const [playlistName, setPlaylistName] = useState(null)
     //keep track of score
     const [score, setScore] = useState(0)
     //pick the first track. This is the current track that is the correct answer
@@ -23,6 +29,8 @@ export function Game({ token }) {
     const [answers, setAnswers] = useState()
     const [gameOver, setGameOver] = useState(false)
     const [buttonsDisabled, setDisabled] = useState(false)
+    const [answerCorrect, setAnswerCorrect] = useState(false)
+    const [incorrectAnswer, setIncorrectAnswer] = useState(null)
 
     const modalRef = useRef()
 
@@ -38,6 +46,9 @@ export function Game({ token }) {
 
                 //get tracks from spotify
                 let response = await axios.get("https://api.spotify.com/v1/playlists/" + playlistId, config)
+                console.log(response.data)
+                setPlaylistImg(response.data.images[0].url)
+                setPlaylistName(response.data.name)
 
                 //save tracks to state
                 setPlaylistTracks(response.data.tracks.items)
@@ -110,6 +121,9 @@ export function Game({ token }) {
     }, [playlistTracks])
 
     function nextSong() {
+        //hide correct answer
+        setAnswerCorrect(false)
+
         //check that track has preview url
         const nextTrack = playlistTracks[currentTrackIndex]
         if (!nextTrack.track.preview_url) {
@@ -144,14 +158,18 @@ export function Game({ token }) {
         //check if answer matches the current track
         if (answer === currentTrackName) {
             console.log("correct answer!!")
-            event.target.style.backgroundColor = "green"
+            setAnswerCorrect(true)
+
+            //add current score to leaderboard
+            const username = localStorage.getItem("username")
+            const currentScore = { id: uuid(), username, score: score + 1, playlist_id: playlistId }
+            setCurrentScore(currentScore)
 
             //increment score
             setScore(score + 1)
 
             //disable all buttons
             setDisabled(true)
-
 
             //show modal with next button
             modalRef.current.style.display = "block"
@@ -160,10 +178,8 @@ export function Game({ token }) {
         else {
             console.log("incorrect answer")
             //set chosen answer to red
-            event.target.style.backgroundColor = "red"
-
-            //set correct answer to green
-
+            event.target.classList.add("game__button--incorrect")
+            setIncorrectAnswer(answer)
 
             //disable all buttons
             setDisabled(true)
@@ -181,8 +197,9 @@ export function Game({ token }) {
                 // console.log("server score response:", response)
                 console.log("new score obj", response.data)
 
-                //TODO update leaderboard 
+                //update leaderboard 
                 setScores([...scores, response.data])
+                setCurrentScore(null)
 
             } catch (err) {
                 console.log(err)
@@ -201,8 +218,6 @@ export function Game({ token }) {
 
             //enable buttons
             setDisabled(false)
-
-            //reset background color for all buttons
         }
     }
 
@@ -216,6 +231,7 @@ export function Game({ token }) {
         window.history.back()
     }
 
+
     if (!playlistTracks || !answers || !currentTrack) {
         return <h1>Loading</h1>
     }
@@ -223,16 +239,22 @@ export function Game({ token }) {
     return (
         <main className="game">
             <section className="game__container">
+                <div className="game__information">
+                    <img className="game__image" src={playlistImg}></img>
+                    <h2 className="game__playlist-name">{playlistName}</h2>
+                </div>
                 <h3>Score: {score}</h3>
                 <div className="audio-player">
-                    <audio src={currentTrack.track.preview_url} autoPlay controls></audio>
+                    {/* <audio id="audio" src={currentTrack.track.preview_url} autoPlay controls></audio> */}
+                    <MusicVisualizer audioUrl={currentTrack.track.preview_url}/>
+
                 </div>
                 <div className="game__answers">
                     {/* display answer buttons using answers state */}
                     {answers.map(answer => {
                         const trackName = playlistTracks[answer].track.name
                         return (
-                            <button className={` ${gameOver && trackName === currentTrack.track.name ? "game__button game__button--correct" : " game__button"}`} disabled={buttonsDisabled} key={playlistTracks[answer].track.id} onClick={(event) => handleAnswer(event, trackName)}>{trackName}</button>
+                            <button className={` ${gameOver && trackName === currentTrack.track.name || answerCorrect && trackName === currentTrack.track.name ? "game__button game__button--correct" : " game__button"} ${incorrectAnswer === trackName ? "game__button--incorrect" : ""}`} disabled={buttonsDisabled} key={Math.random() * 999999} onClick={(event) => handleAnswer(event, trackName)}>{trackName}</button>
                         )
                     })}
                 </div>
@@ -246,7 +268,7 @@ export function Game({ token }) {
                     }
                 </div>
             </section>
-            <PlaylistLeaderboard scores={scores} />
+            <PlaylistLeaderboard scores={scores} currentScore={currentScore} />
 
         </main>
     )

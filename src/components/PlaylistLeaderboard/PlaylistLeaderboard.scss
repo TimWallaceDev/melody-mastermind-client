@@ -1,6 +1,71 @@
 
+.leaderboard {
+    padding: 16px;
+
+    &__headings {
+        display: flex;
+
+        &--index {
+            width: 50px;
+        }
+
+        &--username {
+            flex: 1
+        }
+        &--score {
+            width: 50px;
+        }
+    }
+
+
+}
+
 
 .score {
     display: flex;
-    gap: 16px;
+    border: 1px solid gray;
+    font-size: 1.1rem;
+
+    &--current {
+        background-color: white;
+        color: black
+    }
+
+    &__index {
+        width: 50px;
+        background-color: darkgreen;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-right: 1px solid gray;
+    }
+    
+    &__score {
+        width: 50px;
+        margin: 0;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-right: 1px solid gray;
+
+        &--current {
+            background-color: white;
+            color: black;
+        }
+
+    }
+
+    &__username {
+        flex: 1;
+        margin: 0;
+        text-align: left;
+        padding: 4px 16px;
+
+        &--current {
+            background-color: white;
+            color: black;
+        }
+    }
 }

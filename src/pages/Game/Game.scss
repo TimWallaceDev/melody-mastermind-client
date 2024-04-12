@@ -3,6 +3,7 @@
 .game {
     display: flex;
     flex-direction: column;
+    margin-bottom: 128px;
 
     @include tablet {
         flex-direction: row;
@@ -30,6 +31,9 @@
         &--correct {
             background-color: green;
         }
+        &--incorrect {
+            background-color: red;
+        }
     }
 
     &__modal {
@@ -48,3 +52,9 @@
         margin-top: 16px;
     }
 }
+
+#canvas {
+    width: 100%;
+    height: 200px;
+  }
+  
