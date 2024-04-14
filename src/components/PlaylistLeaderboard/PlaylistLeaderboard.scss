@@ -1,19 +1,49 @@
+@use "../../styles/partials/mixins" as *;
+@use "../../styles/partials/variables" as *;
 
 .leaderboard {
     padding: 16px;
+    margin-top: 64px;
+
+    @include tablet {
+        padding: 0;
+        padding-top: 0px;
+        margin-top: 32px;
+        width: 100%;
+
+    }
+
+    &__heading {
+        text-align: left;
+        font-weight: 200;
+    }
 
     &__headings {
         display: flex;
+        border: 1px solid $leaderboard-gray;
+        border-radius: 4px 4px 0 0;
 
         &--index {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
             width: 50px;
+            border-right: 1px solid $leaderboard-gray;
         }
 
         &--username {
-            flex: 1
+            flex: 1;
+            text-align: left;
+            padding-left: 16px;
         }
         &--score {
+            display: flex;
+            justify-content: center;
+            align-items: center;
             width: 50px;
+            margin: 0;
+            border-right: 1px solid $leaderboard-gray;
         }
     }
 
@@ -23,7 +53,8 @@
 
 .score {
     display: flex;
-    border: 1px solid gray;
+    border: 1px solid rgb(48, 47, 47);
+    flex: 1;
     font-size: 1.1rem;
 
     &--current {
@@ -33,12 +64,12 @@
 
     &__index {
         width: 50px;
-        background-color: darkgreen;
+        background-color: rgb(57, 6, 55);
         margin: 0;
         display: flex;
         align-items: center;
         justify-content: center;
-        border-right: 1px solid gray;
+        border-right: 1px solid $leaderboard-gray;
     }
     
     &__score {
@@ -48,7 +79,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        border-right: 1px solid gray;
+        border-right: 1px solid rgb(77, 74, 74);
 
         &--current {
             background-color: white;
@@ -61,7 +92,7 @@
         flex: 1;
         margin: 0;
         text-align: left;
-        padding: 4px 16px;
+        padding: 8px 16px;
 
         &--current {
             background-color: white;

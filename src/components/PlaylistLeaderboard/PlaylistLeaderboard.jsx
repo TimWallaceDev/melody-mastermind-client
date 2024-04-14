@@ -18,7 +18,7 @@ export function PlaylistLeaderboard({ scores, currentScore }) {
 
     return (
         <section className="leaderboard" >
-            <h1>Leaderboard</h1>
+            {/* <h3 className="leaderboard__heading">Leaderboard</h3> */}
             <div className="leaderboard__headings">
                 <h4 className="leaderboard__headings--index">Rank</h4>
                 <h4 className="leaderboard__headings--score">Score</h4>

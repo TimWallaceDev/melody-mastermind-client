@@ -1,11 +1,11 @@
 
-add playlist image on game page
+navbar
+add icons to play again and home button
 STYLING
 
-add music visualizer
 add countdown timer
 
 make server send json and client accept json response for playlist scores
 get more songs if youre on the last song
-share on social button
 add account page where you can add friends (backend/frontend)
+share on social button

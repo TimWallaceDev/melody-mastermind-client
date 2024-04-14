@@ -5,6 +5,7 @@ import { useParams, Navigate } from 'react-router-dom'
 import axios from "axios"
 import { v4 as uuid } from "uuid"
 import { MusicVisualizer } from "../../components/MusicVisualizer/MusicVisualizer"
+import AudioSpectrum from "react-audio-spectrum"
 import testAudio from "../../assets/audio/05 Just the Two of Us.wav"
 
 
@@ -174,6 +175,12 @@ export function Game({ token }) {
             //show modal with next button
             modalRef.current.style.display = "block"
 
+            //scroll to bottom
+            window.scrollTo({
+                top: document.documentElement.scrollHeight,
+                behavior: 'smooth' // Optional: smooth scrolling animation
+            });
+
         }
         else {
             console.log("incorrect answer")
@@ -197,9 +204,16 @@ export function Game({ token }) {
                 // console.log("server score response:", response)
                 console.log("new score obj", response.data)
 
-                //update leaderboard 
-                setScores([...scores, response.data])
-                setCurrentScore(null)
+                //add current score to leaderboard
+                const username = localStorage.getItem("username")
+                const currentScore = { id: uuid(), username, score: score, playlist_id: playlistId }
+                setCurrentScore(currentScore)
+
+                //scroll to bottom
+                window.scrollTo({
+                    top: document.documentElement.scrollHeight,
+                    behavior: 'smooth' // Optional: smooth scrolling animation
+                });
 
             } catch (err) {
                 console.log(err)
@@ -243,32 +257,61 @@ export function Game({ token }) {
                     <img className="game__image" src={playlistImg}></img>
                     <h2 className="game__playlist-name">{playlistName}</h2>
                 </div>
-                <h3>Score: {score}</h3>
-                <div className="audio-player">
-                    {/* <audio id="audio" src={currentTrack.track.preview_url} autoPlay controls></audio> */}
-                    <MusicVisualizer audioUrl={currentTrack.track.preview_url}/>
+                <div className="game__main">
+                    <h3 className="game__score">Score: {score}</h3>
+                    <div className="audio">
+                        <audio className="audio__player" id="audio" src={currentTrack.track.preview_url} autoPlay controls crossOrigin="anonymous"></audio>
+                        <AudioSpectrum
+                            className="audio__visualizer"
+                            id="audio-canvas"
+                            height={200}
+                            width={300}
+                            audioId={'audio'}
+                            capColor={'red'}
+                            capHeight={2}
+                            meterWidth={12}
+                            meterCount={200}
+                            meterColor={[
+                                { stop: 0, color: 'purple' },
+                                { stop: 0.5, color: 'green' },
+                                { stop: 1, color: 'red' }
+                            ]}
+                            gap={4}
+                        />
 
+                    </div>
+                    <div className="game__answers">
+                        {/* display answer buttons using answers state */}
+                        {answers.map(answer => {
+                            const trackName = playlistTracks[answer].track.name
+                            return (
+                                <button className={` ${gameOver && trackName === currentTrack.track.name || answerCorrect && trackName === currentTrack.track.name ? "game__button game__button--correct" : " game__button"} ${incorrectAnswer === trackName ? "game__button--incorrect" : ""}`} disabled={buttonsDisabled} key={Math.random() * 999999} onClick={(event) => handleAnswer(event, trackName)}>{trackName}</button>
+                            )
+                        })}
+                    </div>
+                    <div className="game__modal" ref={modalRef}>
+                        {!gameOver && <button className="game__modal-button" onClick={handleNext}>Next Song</button>}
+                        {gameOver &&
+                            <div className="game__end-options">
+                                <button className="game__modal-button" onClick={handlePlayAgain}>Play Again</button>
+                                <button className="game__modal-button" onClick={handleGoHome}>Go Home</button>
+                            </div>
+                        }
+                    </div>
                 </div>
-                <div className="game__answers">
-                    {/* display answer buttons using answers state */}
-                    {answers.map(answer => {
-                        const trackName = playlistTracks[answer].track.name
-                        return (
-                            <button className={` ${gameOver && trackName === currentTrack.track.name || answerCorrect && trackName === currentTrack.track.name ? "game__button game__button--correct" : " game__button"} ${incorrectAnswer === trackName ? "game__button--incorrect" : ""}`} disabled={buttonsDisabled} key={Math.random() * 999999} onClick={(event) => handleAnswer(event, trackName)}>{trackName}</button>
-                        )
-                    })}
+
+                <div className="game__left">
+                    <div className="game__information--left">
+                        <img className="game__image" src={playlistImg}></img>
+                        <h2 className="game__playlist-name">{playlistName}</h2>
+                    </div>
+
+                    <PlaylistLeaderboard scores={scores} currentScore={currentScore} />
                 </div>
-                <div className="game__modal" ref={modalRef}>
-                    {!gameOver && <button className="game__modal-button" onClick={handleNext}>Next Song</button>}
-                    {gameOver &&
-                        <div className="game__end-options">
-                            <button className="game__modal-button" onClick={handlePlayAgain}>Play Again</button>
-                            <button className="game__modal-button" onClick={handleGoHome}>Go Home</button>
-                        </div>
-                    }
-                </div>
+
+
             </section>
-            <PlaylistLeaderboard scores={scores} currentScore={currentScore} />
+
 
         </main>
     )
