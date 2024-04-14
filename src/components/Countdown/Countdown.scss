@@ -1,0 +1,31 @@
+@use "../../styles/partials/mixins" as *;
+@use "../../styles/partials/variables" as *;
+
+.countdown{
+
+    @include tablet{
+        width: 400px;
+        border: 1px solid $leaderboard-gray;
+        border-radius: 8px;
+        margin-top: 16px;
+    }
+
+    &__progress {
+        height: 20px;
+        width: 0px;
+        background: linear-gradient(90deg, purple, green, red);
+        border-radius: 8px;
+        animation: 30s progress linear;  
+        animation-fill-mode: forwards;
+    }
+}
+
+@keyframes progress {
+    from {
+        width: 0%;
+    }
+
+    to {
+        width: 100%;
+    }
+}

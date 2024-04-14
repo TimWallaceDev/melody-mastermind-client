@@ -1,0 +1,50 @@
+@use "../../styles/partials/mixins" as *;
+
+.leaderboards {
+    &__wrapper {
+
+        @include desktop {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 64px;
+        }
+    }
+
+    &__leaderboard {
+        margin-top: 64px;
+        display: flex;
+
+        flex-direction: column;
+        align-items: center;
+
+        @include desktop {
+            width: 500px;
+        }
+
+    }
+}
+
+.leaderboard {
+
+
+    &__name {
+
+        @include tablet {
+            width: 400px;
+            text-align: left;
+        }
+    }
+}
+
+
+
+.score {
+
+    width: 100%;
+
+    @include tablet {
+        width: 400px;
+    }
+
+}

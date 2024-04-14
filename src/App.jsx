@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Home } from "./pages/Home/Home"
 import { Game } from './pages/Game/Game';
 import { Navbar } from './components/Navbar/Navbar';
+import { Header } from './components/Header/Header';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Leaderboards } from './pages/Leaderboards/Leaderboards';
 
@@ -40,7 +41,7 @@ if (!token) {
 return (
   <>
     <BrowserRouter>
-      <h1>Melody MasterMind</h1>
+      <Header/>
       <Navbar />
       <Routes>
         <Route path={"/"} element={<Home />} />

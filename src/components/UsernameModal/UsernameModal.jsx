@@ -1,38 +1,39 @@
 import { useRef, useState, useEffect } from "react"
 import "./UsernameModal.scss"
 import axios from 'axios'
+import logo from "../../assets/MMlogo.png"
 
 export function UsernameModal() {
 
-    const [username, setUsername] = useState()
+    const [username, setUsername] = useState("")
     const [errorMessage, setErrorMessage] = useState("")
     const modalRef = useRef()
     const messageRef = useRef()
 
     useEffect(() => {
-        function checkForUsername(){
+        function checkForUsername() {
             const usernameCheck = localStorage.getItem("username")
-            if (usernameCheck){
+            if (usernameCheck) {
                 console.log("user has name")
-              //hide Modal
-              modalRef.current.style.display = "none"
+                //hide Modal
+                modalRef.current.style.display = "none"
             }
         }
         checkForUsername()
     }, [])
 
-    async function checkUsernameAvailable(username){
+    async function checkUsernameAvailable(username) {
         try {
-            const response = await axios.post("http://localhost:8080/users/check", {username: username})
+            const response = await axios.post("http://localhost:8080/users/check", { username: username })
             const available = response.data.username_available
-            return available? true: false
-        }catch(err){
+            return available ? true : false
+        } catch (err) {
             console.log(err)
             return false
         }
     }
 
-    async function handleChange(e){
+    async function handleChange(e) {
         const username = e.target.value
         setUsername(username)
 
@@ -40,7 +41,7 @@ export function UsernameModal() {
         const isAvailable = await checkUsernameAvailable(username)
 
         //display message
-        if (isAvailable){
+        if (isAvailable) {
             setErrorMessage("Username available!")
             messageRef.current.style.color = "green"
         }
@@ -50,10 +51,10 @@ export function UsernameModal() {
         }
     }
 
-    async function handleUsername(){
+    async function handleUsername() {
         console.log("registering as ", username)
         //make sure username has a least one character
-        if (!username){
+        if (!username) {
             setErrorMessage("Please enter a username")
             messageRef.current.style.color = "red"
             return
@@ -62,11 +63,11 @@ export function UsernameModal() {
         const available = await checkUsernameAvailable(username)
         let userId
         //if available, create user
-        if (available){
+        if (available) {
             try {
-                const response = await axios.post("http://localhost:8080/users", {username})
+                const response = await axios.post("http://localhost:8080/users", { username })
                 userId = response.data[0]
-            }catch(err){
+            } catch (err) {
                 console.log(err)
             }
         }
@@ -88,6 +89,10 @@ export function UsernameModal() {
     return (
         <section className="username-modal__wrapper" ref={modalRef}>
             <div className="username-modal">
+                <div className="username-modal__brand">
+                    <img src={logo} alt="" className="username-modal__logo" />
+                    <h1 className="username-modal__name">Melody <br></br> MasterMind</h1>
+                </div>
                 <h2 className="username-modal__heading">Choose A Username</h2>
                 <span className="username-modal__message" ref={messageRef}>{errorMessage}</span>
                 <label className="username-modal__label">Username</label>

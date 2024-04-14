@@ -3,14 +3,14 @@
 .game {
     display: flex;
     flex-direction: column;
-    margin: 16px 16px 128px 16px;
+    margin: 32px 16px 128px 16px;
 
     @include tablet {
-        margin-top: 32px;
+        margin-top: 64px;
     }
 
     @include desktop {
-        margin-top: 64px;
+        margin-top: 128px;
     }
 
     &__container {
@@ -26,6 +26,9 @@
 
     &__main {
         flex:1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
     &__score {
@@ -34,10 +37,12 @@
         @include tablet {
             margin-top: 0;
         }
+    }
 
-        @include desktop{
-            font-size: 4rem;
-        }
+    &__right-wrapper {
+        display: flex;
+        justify-content: center;
+        flex: 1;
     }
 
     &__left {
@@ -47,14 +52,17 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            max-width: 400px;
         }
     }
+
+
 
     &__image {
         width: 50%;
 
         @include tablet {
-            max-width: 200px;
+            max-width: 150px;
         }
     }
 
@@ -64,10 +72,6 @@
             font-size: 2rem;
             text-align: left
         }
-
-        // @include desktop {
-        //     font-size: 4rem;
-        // }
     }
 
     &__information {
@@ -96,8 +100,7 @@
         gap: 16px;
         align-items: center;
         margin-top: 16px;
-
-        
+        width: 100%;
     }
 
     &__button {
@@ -118,11 +121,12 @@
         &--incorrect {
             background-color: red;
         }
+        
     }
 
     &__modal {
         display: none;
-        
+        width: 100%;
     }
 
     &__modal-button {
@@ -134,6 +138,21 @@
         border-radius: 30px;
         font-size: 1.1rem;
         margin-top: 16px;
+        background-repeat: no-repeat;
+        background-size: 25px;
+        background-position: center left calc(50% - 75px);
+
+        &--play-again {
+            background-image: url("../../assets/icons/icons8-reset-100.png");
+            background-size: 25px;
+        }
+
+        &--playlists {
+            background-image: url("../../assets/icons/icons8-playlist-96.png")
+        }
+        &--next {
+            background-image: url("../../assets/icons/icons8-next-100.png");
+        }
 
         @include tablet {
             width: 400px;
@@ -142,20 +161,18 @@
 }
 
 .audio {
+    width: 100%;
     &__player {
         display: none;
     }
-    &__visualizer {
-        width: 100%;
-    }
-
 }
 
 #audio-canvas {
     width: 100%;
+    max-height: 150px;
 
     @include tablet {
 
-        max-width: 400px;
+        width: 400px;
     }
 }

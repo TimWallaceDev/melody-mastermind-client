@@ -1,0 +1,24 @@
+
+
+.header {
+    display: flex;
+    // justify-content: center;
+    padding: 16px;
+
+    &__brand {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+    }
+
+    &__logo {
+        height: 30px;
+        border-radius: 4px;
+    }
+
+    &__name {
+        text-align: left;
+        color: green;
+        font-size: 0.9rem;
+    }
+}
