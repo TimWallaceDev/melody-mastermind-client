@@ -5,6 +5,7 @@ import { Home } from "./pages/Home/Home"
 import { Game } from './pages/Game/Game';
 import { Navbar } from './components/Navbar/Navbar';
 import { Header } from './components/Header/Header';
+import { Account } from './pages/Account/Account';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Leaderboards } from './pages/Leaderboards/Leaderboards';
 
@@ -47,6 +48,7 @@ return (
         <Route path={"/"} element={<Home />} />
         <Route path={"/game/:playlistId"} element={<Game token={token} />} />
         <Route path={"/leaderboards"} element={<Leaderboards/>}/>
+        <Route path={"/account"} element={<Account />}/>
       </Routes>
     </BrowserRouter>
   </>

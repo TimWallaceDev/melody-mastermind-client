@@ -2,12 +2,13 @@
 @use "../../styles/partials/variables" as *;
 
 .countdown{
+    width: 100%;
+    border: 1px solid $leaderboard-gray;
+    border-radius: 8px;
+    margin-top: 16px;
 
-    @include tablet{
+    @include tablet {
         width: 400px;
-        border: 1px solid $leaderboard-gray;
-        border-radius: 8px;
-        margin-top: 16px;
     }
 
     &__progress {

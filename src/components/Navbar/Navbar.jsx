@@ -1,5 +1,6 @@
 import "./Navbar.scss"
 import { Link } from "react-router-dom"
+import { useState } from "react"
 import home from "../../assets/icons/home.svg"
 import leaderboard from "../../assets/icons/leaderboard-100.png"
 import account from "../../assets/icons/account-100.png"
@@ -25,9 +26,9 @@ export function Navbar() {
                 </li>
 
                 <li className="navbar__item">
-                    <Link to={"/"} className="navbar__link">
+                    <Link to={`/account`} className="navbar__link">
                         <img className="navbar__icon" src={account} alt="account icon" />
-                        <span className="navbar__text">Login</span>
+                        <span className="navbar__text">Account</span>
                     </Link>
                 </li>
                 

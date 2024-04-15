@@ -1,3 +1,5 @@
+@use "../../styles/partials/mixins" as *;
+
 .playlist {
 
     &__link {
@@ -10,6 +12,10 @@
     }
 
     &__name {
+
+        @include tablet {
+            max-width: 200px;
+        }
         
     }
 }

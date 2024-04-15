@@ -1,32 +1,15 @@
 
-navbar
 STYLING
 
 add gold/silver/bronze on leaderboard
-
-make server send json and client accept json response for playlist scores
-get more songs if youre on the last song
-add account page where you can add friends (backend/frontend)
 share on social button
 
 today 
--finish navbar
--add countdown timer
 -share on social button
-
-Monday
-
--account page
--number of songs
--number of playlists
--top rank
--history?
--add friends
--leaderboards => toggle friends only
+-find high quality playlists
 
 
 Tuesday
-
 -cleanup code
 -testing
 -deployment?
