@@ -1,6 +1,6 @@
 //functions
 import { useEffect, useState, useRef } from "react"
-import { useParams, Navigate } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import axios from "axios"
 import { v4 as uuid } from "uuid"
 //components
@@ -12,6 +12,7 @@ import "./Game.scss"
 
 
 export function Game({ token }) {
+    console.log(token)
 
     const { playlistId } = useParams()
     //scores for the leaderboard
@@ -50,7 +51,6 @@ export function Game({ token }) {
 
                 //get tracks from spotify
                 let response = await axios.get("https://api.spotify.com/v1/playlists/" + playlistId, config)
-                console.log(response.data)
                 setPlaylistImg(response.data.images[0].url)
                 setPlaylistName(response.data.name)
 
@@ -65,7 +65,6 @@ export function Game({ token }) {
             // get scores
             const response = await axios.get("http://localhost:8080/scores/" + playlistId)
             const scores = response.data
-            console.log({ scores })
 
             //save scores to state
             setScores(scores)
@@ -161,7 +160,6 @@ export function Game({ token }) {
 
         //check if answer matches the current track
         if (answer === currentTrackName) {
-            console.log("correct answer!!")
             setAnswerCorrect(true)
 
             //add current score to leaderboard
@@ -186,7 +184,6 @@ export function Game({ token }) {
 
         }
         else {
-            console.log("incorrect answer")
             //set chosen answer to red
             event.target.classList.add("game__button--incorrect")
             setIncorrectAnswer(answer)
@@ -204,8 +201,6 @@ export function Game({ token }) {
             const params = { username, score, playlist_id: playlistId }
             try {
                 const response = await axios.post("http://localhost:8080/scores", params)
-                // console.log("server score response:", response)
-                console.log("new score obj", response.data)
 
                 //add current score to leaderboard
                 const username = localStorage.getItem("username")
@@ -254,11 +249,6 @@ export function Game({ token }) {
         window.history.back()
     }
 
-    function handleAudioLoad(e) {
-        console.log(e.target.duration)
-
-    }
-
 
     if (!playlistTracks || !answers || !currentTrack) {
         return <h1>Loading</h1>
@@ -281,7 +271,6 @@ export function Game({ token }) {
                             autoPlay
                             controls
                             crossOrigin="anonymous"
-                            onLoadedMetadata={(e) => handleAudioLoad(e)}
                         ></audio>
                         <AudioSpectrum
                             className="audio__visualizer"
@@ -302,7 +291,7 @@ export function Game({ token }) {
                         />
 
                     </div>
-                    <Countdown length={30} track={currentTrackIndex}/>
+                    <Countdown length={30} track={currentTrackIndex} />
                     <div className="game__answers">
                         {/* display answer buttons using answers state */}
                         {answers.map(answer => {

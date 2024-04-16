@@ -1,4 +1,3 @@
-import { useParams } from "react-router-dom"
 import "./Account.scss"
 import { useEffect, useState } from "react"
 import axios from "axios"
@@ -16,9 +15,7 @@ export function Account() {
             try {
                 const username = localStorage.getItem("username")
                 const response = await axios.get("http://localhost:8080/account/" + username)
-
                 const data = response.data
-                console.log(data)
                 setInformation(data)
             } catch (err) {
                 console.log(err)

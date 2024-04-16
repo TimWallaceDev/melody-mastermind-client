@@ -68,7 +68,7 @@ export function Leaderboards() {
                             return (
                                 <div key={score.id} className="score">
                                     <h4 className="score__index">{index + 1}</h4>
-                                    <h5 className="score__score">{score.score}</h5>
+                                    <h4 className="score__score">{score.score}</h4>
                                     <h4 className="score__username">{score.username}</h4>
                                 </div>
                             )

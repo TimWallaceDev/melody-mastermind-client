@@ -15,8 +15,6 @@ function App() {
   const BACKEND_PORT = "8080"
   const BACKEND_URL = "http://localhost:"
 
-
-
   useEffect(() => {
     //get token to use for authorization
     async function getToken() {
@@ -25,7 +23,6 @@ function App() {
       let response = await axios.get(`${BACKEND_URL}${BACKEND_PORT}/token`)
       //save token in state
       setToken(response.data.access_token)
-      console.log(response.data.access_token)
     }
 
     getToken()

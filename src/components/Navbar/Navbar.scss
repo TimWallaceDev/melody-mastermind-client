@@ -1,9 +1,13 @@
-
+@use "../../styles/partials/mixins" as *;
 
 .navbar {
     position: fixed;
     bottom: 0;
     width: 100%;
+
+    @include desktop {
+        display: none;
+    }
 
     &__items {
         display: flex;

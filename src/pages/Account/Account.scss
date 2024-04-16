@@ -4,11 +4,11 @@
     padding: 16px;
 
     @include tablet {
-        padding: 32px;
+        padding: 64px;
     }
 
     @include desktop {
-        padding: 64px;
+        padding: 128px;
     }
     
 
@@ -27,6 +27,10 @@
             flex-wrap: wrap;
             justify-content: center;
         }
+
+        @include desktop {
+            margin-top: 64px;
+        }
     }
 
     &__information {
@@ -41,8 +45,6 @@
         @include tablet {
             flex: 1;
         }
-       
-        
     }
 
     &__information-label {

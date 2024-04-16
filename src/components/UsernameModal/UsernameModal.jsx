@@ -14,7 +14,6 @@ export function UsernameModal() {
         function checkForUsername() {
             const usernameCheck = localStorage.getItem("username")
             if (usernameCheck) {
-                console.log("user has name")
                 //hide Modal
                 modalRef.current.style.display = "none"
             }
@@ -52,7 +51,6 @@ export function UsernameModal() {
     }
 
     async function handleUsername() {
-        console.log("registering as ", username)
         //make sure username has a least one character
         if (!username) {
             setErrorMessage("Please enter a username")
@@ -78,7 +76,6 @@ export function UsernameModal() {
         }
 
         //set username in localstorage
-        console.log("userId: ", userId)
         localStorage.setItem("username", username)
         localStorage.setItem("userId", userId)
 
