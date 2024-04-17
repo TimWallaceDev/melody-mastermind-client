@@ -1,6 +1,12 @@
 @use "../../styles/partials/mixins" as *;
 
 .playlist {
+    width: 47%;
+
+    @include tablet {
+        width: auto;
+    }
+
 
     &__link {
         text-decoration: none;
@@ -8,7 +14,12 @@
 
 
     &__image {
-        max-width: 200px;
+        max-width: 100%;
+
+        @include tablet {
+
+            max-width: 200px;
+        }
     }
 
     &__name {
