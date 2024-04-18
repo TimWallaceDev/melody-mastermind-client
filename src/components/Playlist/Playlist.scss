@@ -7,6 +7,10 @@
         width: auto;
     }
 
+    @include desktop {
+        width: 15%;
+    }
+
 
     &__link {
         text-decoration: none;

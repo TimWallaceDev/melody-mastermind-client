@@ -18,7 +18,7 @@ export function Header() {
                 <ul className="header__items">
                     <li className="header__item">
                         <Link to={"/"} className="header__link">
-                            Home
+                            Playlists
                         </Link>
                     </li>
                     <li className="header__item">
