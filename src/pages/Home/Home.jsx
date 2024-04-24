@@ -1,9 +1,35 @@
 import "./Home.scss"
 import { Playlist } from "../../components/Playlist/Playlist"
-import playlistsData from "../../data/playlists.json"
-import { UsernameModal } from "../../components/UsernameModal/UsernameModal"
+import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
+import axios from "axios"
 
 export function Home() {
+
+    const [playlists, setPlaylists] = useState(null)
+    const [JWT, setJWT] = useState(localStorage.getItem("JWT"))
+    const navigateTo = useNavigate()
+
+    useEffect(() => {
+        async function getPlaylists(){
+            //get playlists from backend server
+            try {
+                const response = await axios.get("http://localhost:8080/playlists")
+                console.log(response.data)
+                setPlaylists(response.data)
+            }catch(err){
+                console.log(err)
+            }
+        }
+        getPlaylists()
+    }, [])
+
+    if (!playlists){
+        return <h1> Loading </h1>
+    }
+    else if (!JWT){
+        navigateTo("/")
+    }
 
     return (
         <section className="home">
@@ -12,10 +38,9 @@ export function Home() {
 
             <div className="home__playlists">
 
-                {playlistsData.map(playlist => <Playlist key={playlist.playlistId} playlist={playlist} />)}
+                {playlists.map(playlist => <Playlist key={playlist.id} playlist={playlist} />)}
 
             </div>
-            <UsernameModal/>
         </section>
     )
 }

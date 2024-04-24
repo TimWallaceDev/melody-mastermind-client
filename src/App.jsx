@@ -8,6 +8,8 @@ import { Header } from './components/Header/Header';
 import { Account } from './pages/Account/Account';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Leaderboards } from './pages/Leaderboards/Leaderboards';
+import { Signup } from './pages/Signup/Signup';
+import { Login } from './components/Login/Login';
 
 function App() {
   const [token, setToken] = useState(null)
@@ -42,7 +44,9 @@ return (
       <Header/>
       <Navbar />
       <Routes>
-        <Route path={"/"} element={<Home />} />
+        <Route path={"/"} element={<Login />} />
+        <Route path={"/signup"} element={<Signup/>}/>
+        <Route path={"/playlists"} element={<Home/>}/>
         <Route path={"/game/:playlistId"} element={<Game token={token} />} />
         <Route path={"/leaderboards"} element={<Leaderboards/>}/>
         <Route path={"/account"} element={<Account />}/>

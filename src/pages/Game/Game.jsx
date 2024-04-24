@@ -35,7 +35,6 @@ export function Game({ token }) {
     const [buttonsDisabled, setDisabled] = useState(false)
     const [answerCorrect, setAnswerCorrect] = useState(false)
     const [incorrectAnswer, setIncorrectAnswer] = useState(null)
-    const [trackLength, setTrackLength] = useState(0)
 
     const modalRef = useRef()
 

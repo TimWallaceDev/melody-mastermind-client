@@ -1,15 +1,16 @@
+FRONTEND
+-account page needs to send JWT
+-account page needs to redirect to home page if no jwt can be found. might as well do the same the leaderboard
+-create log out button that clears username and jwt
 
-STYLING
+BACKEND
+-account controller needs to accept and verify JWT 
 
-add gold/silver/bronze on leaderboard
-share on social button
+-create end of game if there are no songs left
+-make points based on how fast you answer
+-check for swear words in username?
+-add instructions
+-move playlists to the DB
 
-today 
+-add gold/silver/bronze on leaderboard
 -share on social button
--find high quality playlists
-
-
-Tuesday
--cleanup code
--testing
--deployment?

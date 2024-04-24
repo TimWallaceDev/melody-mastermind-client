@@ -12,3 +12,36 @@
         @content;
     }
 }
+
+@mixin input {
+    background-color: transparent;
+    border: 1px solid white;
+    padding: 16px 0px;
+    border-radius: 4px;
+    font-size: 1.1rem;
+    width: 100%;
+
+    &::placeholder {
+        color: gray;
+        font-size: 0.8rem;
+    }
+
+    @include tablet {
+        width: 300px;
+    }
+}
+
+@mixin button--primary {
+    background-color: green;
+    width: 100%;
+    padding: 16px 32px;
+    color: white;
+    border-radius: 30px;
+    font-size: 1.1rem;
+    margin-top: 16px;
+    border: none;
+
+    @include tablet {
+        width: 300px
+    }
+}
