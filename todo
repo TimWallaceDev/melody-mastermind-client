@@ -1,9 +1,6 @@
 FRONTEND
--leaderboard page is using json file to get info about playlists. change that source to db
 
 BACKEND
-
--make points based on how fast you answer
 
 -check for swear words in username?
 -add instructions

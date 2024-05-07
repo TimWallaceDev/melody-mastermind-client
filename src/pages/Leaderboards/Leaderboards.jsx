@@ -17,10 +17,7 @@ export function Leaderboards() {
         async function getScores() {
             //request scores from backend
             const response = await axios.get("http://localhost:8080/scores")
-            console.log("respsonse.data" + response.data)
-            console.log("scores" + response.data.scores)
             setScores(response.data.scores)
-            console.log(response.data.playlists)
             setPlaylistData(response.data.playlists)
         }
         //if no username, redirect home
@@ -29,7 +26,6 @@ export function Leaderboards() {
         }
         getScores()
     }, [])
-
 
 
     if (!scores) {
@@ -49,18 +45,14 @@ export function Leaderboards() {
             }
         }
 
-        console.log(playlistIds)
-
         const scoresArr = []
 
         //map over playlists
-        console.log(playlistData)
 
         for (let playlistId of playlistIds) {
 
             //get playlist title
             const playlistName = playlistData.find(playlist => playlist.id === playlistId)
-            console.log(playlistName)
 
             //get all scores for each playlist / sort scores 
             const tmpScores = scores.filter(score => score.playlist_id === playlistId).sort((a, b) => a.score > b.score ? -1 : 1).slice(0, 10)

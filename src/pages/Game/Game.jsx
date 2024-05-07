@@ -3,8 +3,6 @@ import { useEffect, useState, useRef } from "react"
 import { useParams } from 'react-router-dom'
 import axios from "axios"
 import { v4 as uuid } from "uuid"
-//utils
-import { handleGoHome, handlePlayAgain, pickThreeRandomTracks, setButtons } from "../../utils/gameUtils"
 //components
 import { PlaylistLeaderboard } from "../../components/PlaylistLeaderboard/PlaylistLeaderboard"
 import AudioSpectrum from "react-audio-spectrum"
@@ -14,7 +12,7 @@ import "./Game.scss"
 
 
 export function Game({ token }) {
-    console.log(token)
+    // console.log(token)
 
     const { playlistId } = useParams()
     //scores for the leaderboard
@@ -38,6 +36,10 @@ export function Game({ token }) {
     const [buttonsDisabled, setDisabled] = useState(false)
     const [answerCorrect, setAnswerCorrect] = useState(false)
     const [incorrectAnswer, setIncorrectAnswer] = useState(null)
+    //timer state
+    const [startTime, setStartTime] = useState()
+    const [endTime, setEndTime] = useState()
+
 
     const modalRef = useRef()
 
@@ -87,9 +89,35 @@ export function Game({ token }) {
         setButtons()
     }
 
-    
+    //set buttons at random to the values of the 4 track titles
+    function setButtons() {
+        let trackIndices = pickThreeRandomTracks()
+        setAnswers(trackIndices)
+    }
 
-    
+    //pick three other random songs from the playlist - make sure they are all unique
+    function pickThreeRandomTracks() {
+        //get the current tracks index
+        const trackIndices = [currentTrackIndex]
+        //continue adding to track index until 4 tracks are chosen
+        while (trackIndices.length < 4) {
+            let tmpIndex
+            //create a random number
+            do {
+                tmpIndex = Math.ceil(Math.random() * playlistTracks.length - 1)
+            }
+            //while tmpIndex is in index, keep generating new indexes
+            while (trackIndices.includes(tmpIndex))
+            trackIndices.push(tmpIndex)
+        }
+        //shuffle indices
+        for (let i = 0; i < 10; i++) {
+            let randomIndex = Math.floor(Math.random() * 4)
+            let randomSlice = trackIndices.splice(randomIndex, 1)
+            trackIndices.push(randomSlice[0])
+        }
+        return trackIndices
+    }
 
     //setup game once tracks are present
     useEffect(() => {
@@ -108,7 +136,7 @@ export function Game({ token }) {
         if (!nextTrack.track.preview_url) {
             //make sure the next track is not undefined
             if (playlistTracks[currentTrackIndex + 1]) {
-                console.log("next track: " + playlistTracks[currentTrackIndex + 1])
+                // console.log("next track: " + playlistTracks[currentTrackIndex + 1])
                 setCurrentTrackIndex(currentTrackIndex + 1)
             }
             else {
@@ -141,8 +169,6 @@ export function Game({ token }) {
                 } catch (err) {
                     console.log(err)
                 }
-
-                console.log("You won the game!")
             }
         }
 
@@ -152,7 +178,13 @@ export function Game({ token }) {
         //set the button
         setButtons()
 
-        
+        //start timer
+        startTimer()
+    }
+
+    function startTimer(){
+        const startTime = Date.now()
+        setStartTime(startTime)
     }
 
     //create useEffect runs when answer submitted
@@ -171,19 +203,29 @@ export function Game({ token }) {
     //handles answer submission
     async function handleAnswer(event, answer) {
 
+        //stop timer
+        const endTime = Date.now()
+
         const currentTrackName = currentTrack.track.name
 
         //check if answer matches the current track
         if (answer === currentTrackName) {
             setAnswerCorrect(true)
 
+            //calculate time
+            let time = 3000 - Math.floor((endTime - startTime) / 10)
+            if (time < 0){
+                time = 0
+            }
+            console.log(time)
+
             //add current score to leaderboard
             const username = localStorage.getItem("username")
-            const currentScore = { id: uuid(), username, score: score + 1, playlist_id: playlistId }
+            const currentScore = { id: uuid(), username, score: score + time, playlist_id: playlistId }
             setCurrentScore(currentScore)
 
             //increment score
-            setScore(score + 1)
+            setScore(score + time)
 
             //disable all buttons
             setDisabled(true)
@@ -241,7 +283,6 @@ export function Game({ token }) {
 
             //make sure the next track is not undefined
             if (playlistTracks[currentTrackIndex + 1]) {
-                console.log("next track: " + playlistTracks[currentTrackIndex + 1])
                 setCurrentTrackIndex(currentTrackIndex + 1)
             }
             else {
@@ -274,8 +315,6 @@ export function Game({ token }) {
                 } catch (err) {
                     console.log(err)
                 }
-
-                console.log("You won the game!")
             }
 
             //enable buttons
@@ -289,9 +328,15 @@ export function Game({ token }) {
         }
     }
 
-    
+    //resets game to beginning
+    function handlePlayAgain() {
+        window.location.reload()
+    }
 
-    
+    //takes user to home page
+    function handleGoHome() {
+        window.history.back()
+    }
 
 
     if (!playlistTracks || !answers || !currentTrack) {

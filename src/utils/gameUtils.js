@@ -12,10 +12,6 @@ export function handlePlayAgain() {
     window.location.reload()
 }
 
-export function checkForNextSong(){
-
-}
-
 //pick three other random songs from the playlist - make sure they are all unique
 export function pickThreeRandomTracks() {
     //get the current tracks index
@@ -45,4 +41,74 @@ export function pickThreeRandomTracks() {
 export function setButtons() {
     let trackIndices = pickThreeRandomTracks()
     setAnswers(trackIndices)
+}
+
+
+export function checkForNextSong() {
+    if (playlistTracks[currentTrackIndex + 1]) {
+        return true
+    }
+    else {
+        return false
+    }
+}
+
+export async function postScoreToServer() {
+    //post score to scores
+    //username, score, playlistId, userid
+    const username = localStorage.getItem("username")
+    const params = { username, score, playlist_id: playlistId }
+    try {
+        const response = await axios.post("http://localhost:8080/scores", params)
+
+        //add current score to leaderboard
+        const username = localStorage.getItem("username")
+        const currentScore = { id: uuid(), username, score: score, playlist_id: playlistId }
+        setCurrentScore(currentScore)
+
+        //scroll to bottom
+        window.scrollTo({
+            top: document.documentElement.scrollHeight,
+            behavior: 'smooth' // Optional: smooth scrolling animation
+        });
+
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+
+
+//sets up next question
+export async function handleNext() {
+    if (!gameOver) {
+        //choose the next song
+
+        //make sure the next track is not undefined
+        if (checkForNextSong()) {
+            setCurrentTrackIndex(currentTrackIndex + 1)
+        }
+        else {
+            //end game, no more tracks available
+
+            //if no, game is over. show modal with game over, with button back to home page
+            setGameOver(true)
+            setGameWon(true)
+            modalRef.current.style.display = "block"
+
+            //post score to server
+            postScoreToServer()
+
+            console.log("You won the game!")
+        }
+
+        //enable buttons
+        setDisabled(false)
+
+        //scroll to audio canvas
+        window.scrollTo({
+            top: document.getElementById("game__score").offsetTop - 16,
+            behavior: 'smooth' // Optional: smooth scrolling animation
+        });
+    }
 }
