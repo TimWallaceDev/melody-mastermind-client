@@ -17,6 +17,10 @@
     &__username {
         @include input;
     }
+
+    &__email {
+        @include input;
+    }
     
     &__password {
         @include input;

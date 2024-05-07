@@ -1,17 +1,31 @@
 import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import "./Leaderboards.scss"
 import axios from "axios"
-import playlistData from "../../data/playlists.json"
 
 export function Leaderboards() {
 
     const [scores, setScores] = useState(null)
 
+    const[username] = useState(localStorage.getItem("JWT"))
+
+    const [playlistData, setPlaylistData] = useState(null)
+
+    const navigate = useNavigate()
+
     useEffect(() => {
         async function getScores() {
             //request scores from backend
             const response = await axios.get("http://localhost:8080/scores")
-            setScores(response.data)
+            console.log("respsonse.data" + response.data)
+            console.log("scores" + response.data.scores)
+            setScores(response.data.scores)
+            console.log(response.data.playlists)
+            setPlaylistData(response.data.playlists)
+        }
+        //if no username, redirect home
+        if (!username){
+            navigate("/")
         }
         getScores()
     }, [])
@@ -35,14 +49,18 @@ export function Leaderboards() {
             }
         }
 
+        console.log(playlistIds)
+
         const scoresArr = []
 
         //map over playlists
+        console.log(playlistData)
 
         for (let playlistId of playlistIds) {
 
             //get playlist title
-            const playlistName = playlistData.find(playlist => playlist.playlistId === playlistId)
+            const playlistName = playlistData.find(playlist => playlist.id === playlistId)
+            console.log(playlistName)
 
             //get all scores for each playlist / sort scores 
             const tmpScores = scores.filter(score => score.playlist_id === playlistId).sort((a, b) => a.score > b.score ? -1 : 1).slice(0, 10)

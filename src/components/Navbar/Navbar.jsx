@@ -1,6 +1,6 @@
 import "./Navbar.scss"
 import { Link } from "react-router-dom"
-import { useState } from "react"
+import { Logout } from "../Logout/Logout"
 import home from "../../assets/icons/home.svg"
 import leaderboard from "../../assets/icons/leaderboard-100.png"
 import account from "../../assets/icons/account-100.png"
@@ -31,6 +31,8 @@ export function Navbar() {
                         <span className="navbar__text">Account</span>
                     </Link>
                 </li>
+
+                <Logout className="navbar__item" location="navbar"/>
                 
             </ul>
         </nav>

@@ -3,6 +3,8 @@ import { useEffect, useState, useRef } from "react"
 import { useParams } from 'react-router-dom'
 import axios from "axios"
 import { v4 as uuid } from "uuid"
+//utils
+import { handleGoHome, handlePlayAgain, pickThreeRandomTracks, setButtons } from "../../utils/gameUtils"
 //components
 import { PlaylistLeaderboard } from "../../components/PlaylistLeaderboard/PlaylistLeaderboard"
 import AudioSpectrum from "react-audio-spectrum"
@@ -32,6 +34,7 @@ export function Game({ token }) {
     //this is the list of indices that will be used to set the answers
     const [answers, setAnswers] = useState()
     const [gameOver, setGameOver] = useState(false)
+    const [gameWon, setGameWon] = useState(false)
     const [buttonsDisabled, setDisabled] = useState(false)
     const [answerCorrect, setAnswerCorrect] = useState(false)
     const [incorrectAnswer, setIncorrectAnswer] = useState(null)
@@ -84,35 +87,9 @@ export function Game({ token }) {
         setButtons()
     }
 
-    //set buttons at random to the values of the 4 track titles
-    function setButtons() {
-        let trackIndices = pickThreeRandomTracks()
-        setAnswers(trackIndices)
-    }
+    
 
-    //pick three other random songs from the playlist - make sure they are all unique
-    function pickThreeRandomTracks() {
-        //get the current tracks index
-        const trackIndices = [currentTrackIndex]
-        //continue adding to track index until 4 tracks are chosen
-        while (trackIndices.length < 4) {
-            let tmpIndex
-            //create a random number
-            do {
-                tmpIndex = Math.ceil(Math.random() * playlistTracks.length - 1)
-            }
-            //while tmpIndex is in index, keep generating new indexes
-            while (trackIndices.includes(tmpIndex))
-            trackIndices.push(tmpIndex)
-        }
-        //shuffle indices
-        for (let i = 0; i < 10; i++) {
-            let randomIndex = Math.floor(Math.random() * 4)
-            let randomSlice = trackIndices.splice(randomIndex, 1)
-            trackIndices.push(randomSlice[0])
-        }
-        return trackIndices
-    }
+    
 
     //setup game once tracks are present
     useEffect(() => {
@@ -122,14 +99,51 @@ export function Game({ token }) {
         setupGame()
     }, [playlistTracks])
 
-    function nextSong() {
+    async function nextSong() {
         //hide correct answer
         setAnswerCorrect(false)
 
         //check that track has preview url
         const nextTrack = playlistTracks[currentTrackIndex]
         if (!nextTrack.track.preview_url) {
-            setCurrentTrackIndex(currentTrackIndex + 1)
+            //make sure the next track is not undefined
+            if (playlistTracks[currentTrackIndex + 1]) {
+                console.log("next track: " + playlistTracks[currentTrackIndex + 1])
+                setCurrentTrackIndex(currentTrackIndex + 1)
+            }
+            else {
+                //end game
+                console.log("you won!")
+
+                //if no, game is over. show modal with game over, with button back to home page
+                setGameOver(true)
+                setGameWon(true)
+                modalRef.current.style.display = "block"
+
+                //post score to scores
+                //username, score, playlistId, userid
+                const username = localStorage.getItem("username")
+                const params = { username, score, playlist_id: playlistId }
+                try {
+                    const response = await axios.post("http://localhost:8080/scores", params)
+
+                    //add current score to leaderboard
+                    const username = localStorage.getItem("username")
+                    const currentScore = { id: uuid(), username, score: score, playlist_id: playlistId }
+                    setCurrentScore(currentScore)
+
+                    //scroll to bottom
+                    window.scrollTo({
+                        top: document.documentElement.scrollHeight,
+                        behavior: 'smooth' // Optional: smooth scrolling animation
+                    });
+
+                } catch (err) {
+                    console.log(err)
+                }
+
+                console.log("You won the game!")
+            }
         }
 
         //set the track
@@ -137,6 +151,8 @@ export function Game({ token }) {
 
         //set the button
         setButtons()
+
+        
     }
 
     //create useEffect runs when answer submitted
@@ -219,13 +235,48 @@ export function Game({ token }) {
     }
 
     //sets up next question
-    function handleNext() {
+    async function handleNext() {
         if (!gameOver) {
             //choose the next song
-            setCurrentTrackIndex(currentTrackIndex + 1)
 
-            //hide modal
-            modalRef.current.style.display = "none"
+            //make sure the next track is not undefined
+            if (playlistTracks[currentTrackIndex + 1]) {
+                console.log("next track: " + playlistTracks[currentTrackIndex + 1])
+                setCurrentTrackIndex(currentTrackIndex + 1)
+            }
+            else {
+                //end game
+                console.log("you won!")
+
+                //if no, game is over. show modal with game over, with button back to home page
+                setGameOver(true)
+                setGameWon(true)
+                modalRef.current.style.display = "block"
+
+                //post score to scores
+                //username, score, playlistId, userid
+                const username = localStorage.getItem("username")
+                const params = { username, score, playlist_id: playlistId }
+                try {
+                    const response = await axios.post("http://localhost:8080/scores", params)
+
+                    //add current score to leaderboard
+                    const username = localStorage.getItem("username")
+                    const currentScore = { id: uuid(), username, score: score, playlist_id: playlistId }
+                    setCurrentScore(currentScore)
+
+                    //scroll to bottom
+                    window.scrollTo({
+                        top: document.documentElement.scrollHeight,
+                        behavior: 'smooth' // Optional: smooth scrolling animation
+                    });
+
+                } catch (err) {
+                    console.log(err)
+                }
+
+                console.log("You won the game!")
+            }
 
             //enable buttons
             setDisabled(false)
@@ -238,15 +289,9 @@ export function Game({ token }) {
         }
     }
 
-    //resets game to beginning
-    function handlePlayAgain() {
-        window.location.reload()
-    }
+    
 
-    //takes user to home page
-    function handleGoHome() {
-        window.history.back()
-    }
+    
 
 
     if (!playlistTracks || !answers || !currentTrack) {
@@ -302,6 +347,8 @@ export function Game({ token }) {
                     </div>
                     <div className="game__modal" ref={modalRef}>
                         {!gameOver && <button className="game__modal-button game__modal-button--next" onClick={handleNext}>Next Song</button>}
+                        
+                        {(gameOver && gameWon) && <h2>You beat the Game!</h2>}
                         {gameOver &&
                             <div className="game__end-options">
                                 <button className="game__modal-button game__modal-button--play-again" onClick={handlePlayAgain}>Play Again</button>

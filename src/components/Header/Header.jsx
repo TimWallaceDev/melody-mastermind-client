@@ -1,6 +1,7 @@
 import "./Header.scss"
 import logo from "../../assets/MMlogo.png"
 import { Link } from 'react-router-dom'
+import { Logout } from "../Logout/Logout"
 
 export function Header() {
 
@@ -31,6 +32,8 @@ export function Header() {
                             Account
                         </Link>
                     </li>
+
+                    {<Logout className="header__item"/>}
                 </ul>
             </div>
 

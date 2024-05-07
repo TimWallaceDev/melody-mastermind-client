@@ -1,28 +1,36 @@
 import "./Account.scss"
 import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import axios from "axios"
 
 export function Account() {
 
-    const username = localStorage.getItem("username")
-
     const [information, setInformation] = useState(null)
 
+    const [JWT] = useState(localStorage.getItem("JWT"))
+
+    const navigate = useNavigate()
 
     useEffect(() => {
         async function getAccountData() {
             //make axios request to backend
             try {
-                const username = localStorage.getItem("username")
-                const response = await axios.get("http://localhost:8080/account/" + username)
+                const response = await axios.get("http://localhost:8080/account", {headers: {Authorization: `Bearer ${JWT}`}})
                 const data = response.data
                 setInformation(data)
             } catch (err) {
                 console.log(err)
             }
         }
+
+        //check for username
+        if (!JWT) {
+            
+            navigate("/")
+        }
+
         getAccountData()
-    }, [username])
+    }, [])
 
     if (!information) {
         return (
@@ -32,7 +40,7 @@ export function Account() {
 
     return (
         <section className="account">
-            <h1 className="account__greeting">Hello, <span className="account__username">{username}</span></h1>
+            <h1 className="account__greeting">Hello, <span className="account__username">{information.username}</span></h1>
             <div className="account__informations">
 
                 <span className="account__information">
