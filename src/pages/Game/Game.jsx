@@ -12,7 +12,7 @@ import "./Game.scss"
 
 
 export function Game({ token }) {
-    // console.log(token)
+    const backendUrl = import.meta.env.VITE_BACKEND_URL
 
     const { playlistId } = useParams()
     //scores for the leaderboard
@@ -67,7 +67,7 @@ export function Game({ token }) {
         }
         async function getScores() {
             // get scores
-            const response = await axios.get("http://localhost:8080/scores/" + playlistId)
+            const response = await axios.get(`${backendUrl}/api/${playlistId}`)
             const scores = response.data
 
             //save scores to state
@@ -153,7 +153,7 @@ export function Game({ token }) {
                 const username = localStorage.getItem("username")
                 const params = { username, score, playlist_id: playlistId }
                 try {
-                    const response = await axios.post("http://localhost:8080/scores", params)
+                    const response = await axios.post(`${backendUrl}/api/scores`, params)
 
                     //add current score to leaderboard
                     const username = localStorage.getItem("username")
@@ -257,7 +257,7 @@ export function Game({ token }) {
             const username = localStorage.getItem("username")
             const params = { username, score, playlist_id: playlistId }
             try {
-                const response = await axios.post("http://localhost:8080/scores", params)
+                const response = await axios.post(`${backendUrl}/api/scores`, params)
 
                 //add current score to leaderboard
                 const username = localStorage.getItem("username")
@@ -299,7 +299,7 @@ export function Game({ token }) {
                 const username = localStorage.getItem("username")
                 const params = { username, score, playlist_id: playlistId }
                 try {
-                    const response = await axios.post("http://localhost:8080/scores", params)
+                    const response = await axios.post(`${backendUrl}/api/scores`, params)
 
                     //add current score to leaderboard
                     const username = localStorage.getItem("username")

@@ -58,7 +58,7 @@ export function Login() {
 
         //send login information to backend
         try {
-            const response = await axios.post("http://localhost:8080/account/login", { username, password })
+            const response = await axios.post(`${backendUrl}/api/account/login`, { username, password })
 
             //TODO save jwt in localstorage
             console.log({ response });
@@ -83,7 +83,7 @@ export function Login() {
 
         //make request to server for a guest account
         try {
-            const response = await axios.post("http://localhost:8080/account/guest")
+            const response = await axios.post(`${backendUrl}/api/account/guest`)
             console.log(response)
 
             //server will send back a JWT for guest to use

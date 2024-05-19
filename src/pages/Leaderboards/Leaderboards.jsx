@@ -16,7 +16,7 @@ export function Leaderboards() {
     useEffect(() => {
         async function getScores() {
             //request scores from backend
-            const response = await axios.get("http://localhost:8080/scores")
+            const response = await axios.get(`${backendUrl}/api/scores`)
             setScores(response.data.scores)
             setPlaylistData(response.data.playlists)
         }
