@@ -6,6 +6,8 @@ import { Link, useNavigate } from "react-router-dom"
 
 export function Login() {
 
+    const backendUrl = import.meta.env.VITE_BACKEND_URL
+
     const navigateTo = useNavigate()
 
     const [username, setUsername] = useState("")

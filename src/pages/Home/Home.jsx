@@ -6,6 +6,8 @@ import axios from "axios"
 
 export function Home() {
 
+    const backendUrl = import.meta.env.VITE_BACKEND_URL
+
     const [playlists, setPlaylists] = useState(null)
     const [JWT, setJWT] = useState(localStorage.getItem("JWT"))
     const navigateTo = useNavigate()

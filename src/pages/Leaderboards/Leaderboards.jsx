@@ -5,6 +5,8 @@ import axios from "axios"
 
 export function Leaderboards() {
 
+    const backendUrl = import.meta.env.VITE_BACKEND_URL
+    
     const [scores, setScores] = useState(null)
 
     const[username] = useState(localStorage.getItem("JWT"))

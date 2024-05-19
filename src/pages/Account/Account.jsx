@@ -5,6 +5,8 @@ import axios from "axios"
 
 export function Account() {
 
+    const backendUrl = import.meta.env.VITE_BACKEND_URL
+
     const [information, setInformation] = useState(null)
 
     const [JWT] = useState(localStorage.getItem("JWT"))

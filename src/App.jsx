@@ -14,15 +14,14 @@ import { Login } from './components/Login/Login';
 function App() {
   const [token, setToken] = useState(null)
 
-  const BACKEND_PORT = "8080"
-  const BACKEND_URL = "http://localhost:"
+  const backendUrl = import.meta.env.VITE_BACKEND_URL
 
   useEffect(() => {
     //get token to use for authorization
     async function getToken() {
 
       //request token from backend
-      let response = await axios.get(`${BACKEND_URL}${BACKEND_PORT}/token`)
+      let response = await axios.get(`${backendUrl}/api/token`)
       //save token in state
       setToken(response.data.access_token)
     }
