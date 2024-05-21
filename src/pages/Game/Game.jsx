@@ -7,6 +7,7 @@ import { v4 as uuid } from "uuid"
 import { PlaylistLeaderboard } from "../../components/PlaylistLeaderboard/PlaylistLeaderboard"
 import AudioSpectrum from "react-audio-spectrum"
 import { Countdown } from "../../components/Countdown/Countdown"
+import { scrollToNext } from "../../utils/gameUtils"
 //styles
 import "./Game.scss"
 
@@ -158,11 +159,11 @@ export function Game({ token }) {
                     const currentScore = { id: uuid(), username, score: score, playlist_id: playlistId }
                     setCurrentScore(currentScore)
 
-                    // //scroll to bottom
-                    // window.scrollTo({
-                    //     top: document.documentElement.scrollHeight,
-                    //     behavior: 'smooth' // Optional: smooth scrolling animation
-                    // });
+                    //scroll to top
+                    window.scrollTo({
+                        top: document.documentElement.scrollHeight,
+                        behavior: 'smooth' // Optional: smooth scrolling animation
+                    });
 
                 } catch (err) {
                     console.log(err)
@@ -180,7 +181,7 @@ export function Game({ token }) {
         startTimer()
     }
 
-    function startTimer(){
+    function startTimer() {
         const startTime = Date.now()
         setStartTime(startTime)
     }
@@ -212,10 +213,10 @@ export function Game({ token }) {
 
             //calculate time
             let time = 1000 - Math.floor((endTime - startTime) / 30)
-            if (time < 0){
+            if (time < 0) {
                 time = 0
             }
-            
+
             //save points to state
             setPoints(time)
 
@@ -233,11 +234,8 @@ export function Game({ token }) {
             //show modal with next button
             modalRef.current.style.display = "block"
 
-            // //scroll to bottom
-            // window.scrollTo({
-            //     top: document.documentElement.scrollHeight,
-            //     behavior: 'smooth' // Optional: smooth scrolling animation
-            // });
+            //scroll next next button
+            scrollToNext()
 
         }
         else {
@@ -264,11 +262,11 @@ export function Game({ token }) {
                 const currentScore = { id: uuid(), username, score: score, playlist_id: playlistId }
                 setCurrentScore(currentScore)
 
-                // //scroll to bottom
-                // window.scrollTo({
-                //     top: document.documentElement.scrollHeight,
-                //     behavior: 'smooth' // Optional: smooth scrolling animation
-                // });
+                //scroll to bottom
+                window.scrollTo({
+                    top: document.documentElement.scrollHeight,
+                    behavior: 'smooth' // Optional: smooth scrolling animation
+                });
 
             } catch (err) {
                 console.log(err)
@@ -305,11 +303,11 @@ export function Game({ token }) {
                     const currentScore = { id: uuid(), username, score: score, playlist_id: playlistId }
                     setCurrentScore(currentScore)
 
-                    // //scroll to bottom
-                    // window.scrollTo({
-                    //     top: document.documentElement.scrollHeight,
-                    //     behavior: 'smooth' // Optional: smooth scrolling animation
-                    // });
+                    //scroll to bottom
+                    window.scrollTo({
+                        top: document.documentElement.scrollHeight,
+                        behavior: 'smooth' // Optional: smooth scrolling animation
+                    });
 
                 } catch (err) {
                     console.log(err)
@@ -389,13 +387,13 @@ export function Game({ token }) {
                             )
                         })}
                     </div>
-                    <div className="game__modal" ref={modalRef}>
-                        {!gameOver && 
-                        <>
-                        <div className="game__points">+ {points} Points</div>
-                        <button className="game__modal-button game__modal-button--next" onClick={handleNext}>Next Song</button>
-                        </>}
-                        
+                    <div className="game__modal" ref={modalRef} id="modal">
+                        {!gameOver &&
+                            <>
+                                <div className="game__points">+ {points} Points</div>
+                                <button className="game__modal-button game__modal-button--next" onClick={handleNext}>Next Song</button>
+                            </>}
+
                         {(gameOver && gameWon) && <h2>You beat the Game!</h2>}
                         {gameOver &&
                             <div className="game__end-options">
