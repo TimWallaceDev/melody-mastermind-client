@@ -80,7 +80,7 @@ export function Signup() {
         }
 
         console.log("signup complete");
-        <Navigate to="/"/>
+        <Navigate to="/melody-mastermind/"/>
     }
 
     async function handleUsernameChange(e) {
@@ -121,7 +121,7 @@ export function Signup() {
 
     async function checkUsernameAvailable(username) {
         try {
-            const response = await axios.post(`${backendUrl}/melody-mastermind/api/users/check"`, { username: username })
+            const response = await axios.post(`${backendUrl}/melody-mastermind/api/users/check`, { username: username })
             const available = response.data.username_available
             return available ? true : false
         } catch (err) {

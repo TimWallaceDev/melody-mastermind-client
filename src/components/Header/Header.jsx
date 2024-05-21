@@ -10,7 +10,7 @@ export function Header() {
 
             <Link to={"/melody-mastermind/"} className="header__brand-link">
                 <div className="header__brand">
-                    <img src={logo} alt="" className="header__logo" />
+                    <img src={"/melody-mastermind" + logo} alt="" className="header__logo" />
                     <h1 className="header__name">Melody <br></br> MasterMind</h1>
                 </div>
             </Link>

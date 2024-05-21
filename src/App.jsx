@@ -21,7 +21,7 @@ function App() {
     async function getToken() {
 
       //request token from backend
-      let response = await axios.get(`${backendUrl}/api/token`)
+      let response = await axios.get(`${backendUrl}/melody-mastermind/api/token`)
       //save token in state
       setToken(response.data.access_token)
     }

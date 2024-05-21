@@ -67,7 +67,7 @@ export function Game({ token }) {
         }
         async function getScores() {
             // get scores
-            const response = await axios.get(`${backendUrl}/melody-mastermind/api/${playlistId}`)
+            const response = await axios.get(`${backendUrl}/melody-mastermind/api/scores/${playlistId}`)
             const scores = response.data
 
             //save scores to state

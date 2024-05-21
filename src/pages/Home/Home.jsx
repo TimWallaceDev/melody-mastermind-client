@@ -17,6 +17,7 @@ export function Home() {
             //get playlists from backend server
             try {
                 const response = await axios.get(`${backendUrl}/melody-mastermind/api/playlists`)
+                console.log("fetching playlists")
                 console.log(response.data)
                 setPlaylists(response.data)
             }catch(err){
@@ -30,7 +31,7 @@ export function Home() {
         return <h1> Loading </h1>
     }
     else if (!JWT){
-        navigateTo("/")
+        navigateTo("/melody-mastermind/")
     }
 
     return (

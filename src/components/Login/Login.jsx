@@ -22,7 +22,7 @@ export function Login() {
         function checkForAuthorization() {
             const JWT = localStorage.getItem("JWT")
             if (JWT) {
-                navigateTo("/playlists")
+                navigateTo("/melody-mastermind/playlists")
             }
         }
         checkForAuthorization()
@@ -68,7 +68,7 @@ export function Login() {
             localStorage.setItem("username", username)
 
             //navigate to playlists
-            navigateTo("/playlists")
+            navigateTo("/melody-mastermind/playlists")
         } catch (err) {
             console.log(err)
             return
@@ -95,7 +95,7 @@ export function Login() {
             console.log(JWT, username)
             localStorage.setItem("JWT", JWT)
             localStorage.setItem("username", username)
-            navigateTo("/playlists")
+            navigateTo("/melody-mastermind/playlists")
         }catch(err){
             console.log(err)
         }
@@ -111,7 +111,7 @@ export function Login() {
             <div className="username-modal__wrapper">
 
                 <div className="username-modal__brand">
-                    <img src={logo} alt="" className="username-modal__logo" />
+                    <img src={"/melody-mastermind" + logo} alt="" className="username-modal__logo" />
                     <h1 className="username-modal__name">Melody <br></br> MasterMind</h1>
                 </div>
 

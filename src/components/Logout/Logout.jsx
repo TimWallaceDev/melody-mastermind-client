@@ -13,7 +13,7 @@ export function Logout({ className, location }) {
         localStorage.removeItem("username")
 
         //redirect to login page
-        navigateTo("/")
+        navigateTo("/melody-mastermind/")
 
     }
 
@@ -23,12 +23,12 @@ export function Logout({ className, location }) {
         <li className={`${className} logout`} onClick={handleLogout}>
             {
                 location === "navbar" &&
-                <>
-                    <img className="navbar__icon" src={logoutIcon} alt="logout icon" />
-                    <span className="navbar__text">Logout</span>
-                </>
+
+                <img className="navbar__icon" src={logoutIcon} alt="logout icon" />
             }
-            
+            <span className="navbar__text">Logout</span>
+
+
         </li>
     )
 }

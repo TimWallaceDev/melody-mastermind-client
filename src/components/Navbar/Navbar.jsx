@@ -20,7 +20,7 @@ export function Navbar() {
 
                 <li className="navbar__item">
                     <Link to={"/melody-mastermind/leaderboards"} className="navbar__link">
-                        <img className="navbar__icon" src={leaderboard} alt="leaderboard icon" />
+                        <img className="navbar__icon" src={"/melody-mastermind/" + leaderboard} alt="leaderboard icon" />
                         <span className="navbar__text"> Leaderboards</span>
                     </Link>
                 </li>
