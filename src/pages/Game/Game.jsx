@@ -136,12 +136,10 @@ export function Game({ token }) {
         if (!nextTrack.track.preview_url) {
             //make sure the next track is not undefined
             if (playlistTracks[currentTrackIndex + 1]) {
-                // console.log("next track: " + playlistTracks[currentTrackIndex + 1])
                 setCurrentTrackIndex(currentTrackIndex + 1)
             }
             else {
                 //end game
-                console.log("you won!")
 
                 //if no, game is over. show modal with game over, with button back to home page
                 setGameOver(true)
@@ -289,7 +287,6 @@ export function Game({ token }) {
             }
             else {
                 //end game
-                console.log("you won!")
 
                 //if no, game is over. show modal with game over, with button back to home page
                 setGameOver(true)

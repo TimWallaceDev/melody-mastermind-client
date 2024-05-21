@@ -42,8 +42,6 @@ export function Login() {
         //prevent form from submitting and refreshing page
         e.preventDefault()
 
-        console.log("logging in")
-
         //check that username has been provided
         if (!username) {
             setErrorMessage("Please enter a username")
@@ -63,13 +61,14 @@ export function Login() {
             const response = await axios.post(`${backendUrl}/melody-mastermind/api/account/login`, { username, password })
 
             //TODO save jwt in localstorage
-            console.log({ response });
             localStorage.setItem("JWT", response.data);
             localStorage.setItem("username", username)
 
             //navigate to playlists
             navigateTo("/melody-mastermind/playlists")
         } catch (err) {
+            setErrorMessage("We couldn't sign you in. Please check your email and password.")
+            errorMessageRef.current.style.color = "red"
             console.log(err)
             return
         }
@@ -81,18 +80,15 @@ export function Login() {
     async function handleGuest(e) {
         //prevent form from submitting and refreshing page
         e.preventDefault()
-        console.log("signing up as guest")
 
         //make request to server for a guest account
         try {
             const response = await axios.post(`${backendUrl}/melody-mastermind/api/account/guest`)
-            console.log(response)
 
             //server will send back a JWT for guest to use
             //save jwt in localstorage
             const JWT = response.data.token
             const username = response.data.username
-            console.log(JWT, username)
             localStorage.setItem("JWT", JWT)
             localStorage.setItem("username", username)
             navigateTo("/melody-mastermind/playlists")

@@ -66,12 +66,9 @@ export function Signup() {
         //send signup information to server
         try {
             const response = await axios.post(`${backendUrl}/melody-mastermind/api/account/signup`, {username, email, password})
-            console.log(response);
             //TODO redirect to login page
-            console.log("about to login page");
 
-            navigateTo("/")
-            console.log("navigating to login page")
+            navigateTo("/melody-mastermind/#/melody-mastermind")
 
         }catch(err){
             setUsernameMessage("something went wrong with the signup....")
@@ -79,8 +76,7 @@ export function Signup() {
             console.log(err)
         }
 
-        console.log("signup complete");
-        <Navigate to="/melody-mastermind/"/>
+        <Navigate to="/melody-mastermind/#/melody-mastermind"/>
     }
 
     async function handleUsernameChange(e) {
@@ -103,19 +99,16 @@ export function Signup() {
 
     async function handlePasswordChange(e) {
         const password = e.target.value
-        console.log(password)
         setPassword(password)
     }
 
     async function handlePasswordConfirmChange(e) {
         const passwordConfirm = e.target.value
-        console.log(passwordConfirm)
         setPasswordConfirm(passwordConfirm)
     }
 
     async function handleEmailChange(e) {
         const email = e.target.value
-        console.log(email)
         setEmail(email)
     }
 
