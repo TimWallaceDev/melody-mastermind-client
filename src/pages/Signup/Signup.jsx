@@ -65,7 +65,7 @@ export function Signup() {
 
         //send signup information to server
         try {
-            const response = await axios.post(`${backendUrl}/api/account/signup`, {username, email, password})
+            const response = await axios.post(`${backendUrl}/melody-mastermind/api/account/signup`, {username, email, password})
             console.log(response);
             //TODO redirect to login page
             console.log("about to login page");

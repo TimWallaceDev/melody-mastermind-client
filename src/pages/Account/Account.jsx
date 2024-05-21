@@ -17,7 +17,7 @@ export function Account() {
         async function getAccountData() {
             //make axios request to backend
             try {
-                const response = await axios.get(`${backendUrl}/api/account`, {headers: {Authorization: `Bearer ${JWT}`}})
+                const response = await axios.get(`${backendUrl}/melody-mastermind/api/account`, {headers: {Authorization: `Bearer ${JWT}`}})
                 const data = response.data
                 setInformation(data)
             } catch (err) {

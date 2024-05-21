@@ -16,7 +16,7 @@ export function Home() {
         async function getPlaylists(){
             //get playlists from backend server
             try {
-                const response = await axios.get(`${backendUrl}/api/playlists`)
+                const response = await axios.get(`${backendUrl}/melody-mastermind/api/playlists`)
                 console.log(response.data)
                 setPlaylists(response.data)
             }catch(err){

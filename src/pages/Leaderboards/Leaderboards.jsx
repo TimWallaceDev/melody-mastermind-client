@@ -18,7 +18,7 @@ export function Leaderboards() {
     useEffect(() => {
         async function getScores() {
             //request scores from backend
-            const response = await axios.get(`${backendUrl}/api/scores`)
+            const response = await axios.get(`${backendUrl}/melody-mastermind/api/scores`)
             setScores(response.data.scores)
             setPlaylistData(response.data.playlists)
         }

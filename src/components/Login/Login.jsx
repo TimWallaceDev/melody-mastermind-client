@@ -60,7 +60,7 @@ export function Login() {
 
         //send login information to backend
         try {
-            const response = await axios.post(`${backendUrl}/api/account/login`, { username, password })
+            const response = await axios.post(`${backendUrl}/melody-mastermind/api/account/login`, { username, password })
 
             //TODO save jwt in localstorage
             console.log({ response });

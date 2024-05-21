@@ -67,7 +67,7 @@ export function Game({ token }) {
         }
         async function getScores() {
             // get scores
-            const response = await axios.get(`${backendUrl}/api/${playlistId}`)
+            const response = await axios.get(`${backendUrl}/melody-mastermind/api/${playlistId}`)
             const scores = response.data
 
             //save scores to state
@@ -153,7 +153,7 @@ export function Game({ token }) {
                 const username = localStorage.getItem("username")
                 const params = { username, score, playlist_id: playlistId }
                 try {
-                    const response = await axios.post(`${backendUrl}/api/scores`, params)
+                    const response = await axios.post(`${backendUrl}/melody-mastermind/api/scores`, params)
 
                     //add current score to leaderboard
                     const username = localStorage.getItem("username")
@@ -257,7 +257,7 @@ export function Game({ token }) {
             const username = localStorage.getItem("username")
             const params = { username, score, playlist_id: playlistId }
             try {
-                const response = await axios.post(`${backendUrl}/api/scores`, params)
+                const response = await axios.post(`${backendUrl}/melody-mastermind/api/scores`, params)
 
                 //add current score to leaderboard
                 const username = localStorage.getItem("username")
@@ -299,7 +299,7 @@ export function Game({ token }) {
                 const username = localStorage.getItem("username")
                 const params = { username, score, playlist_id: playlistId }
                 try {
-                    const response = await axios.post(`${backendUrl}/api/scores`, params)
+                    const response = await axios.post(`${backendUrl}/melody-mastermind/api/scores`, params)
 
                     //add current score to leaderboard
                     const username = localStorage.getItem("username")

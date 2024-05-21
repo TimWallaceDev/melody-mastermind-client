@@ -43,12 +43,12 @@ return (
       <Header/>
       <Navbar />
       <Routes>
-        <Route path={"/"} element={<Login />} />
-        <Route path={"/signup"} element={<Signup/>}/>
-        <Route path={"/playlists"} element={<Home/>}/>
-        <Route path={"/game/:playlistId"} element={<Game token={token} />} />
-        <Route path={"/leaderboards"} element={<Leaderboards/>}/>
-        <Route path={"/account"} element={<Account />}/>
+        <Route path={"/melody-mastermind/"} element={<Login />} />
+        <Route path={"/melody-mastermind/signup"} element={<Signup/>}/>
+        <Route path={"/melody-mastermind/playlists"} element={<Home/>}/>
+        <Route path={"/melody-mastermind/game/:playlistId"} element={<Game token={token} />} />
+        <Route path={"/melody-mastermind/leaderboards"} element={<Leaderboards/>}/>
+        <Route path={"/melody-mastermind/account"} element={<Account />}/>
       </Routes>
     </BrowserRouter>
   </>
