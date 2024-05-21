@@ -8,7 +8,7 @@ export function Header() {
     return (
         <header className="header">
 
-            <Link to={"/"} className="header__brand-link">
+            <Link to={"/melody-mastermind/"} className="header__brand-link">
                 <div className="header__brand">
                     <img src={logo} alt="" className="header__logo" />
                     <h1 className="header__name">Melody <br></br> MasterMind</h1>
@@ -18,17 +18,17 @@ export function Header() {
             <div className="header__links">
                 <ul className="header__items">
                     <li className="header__item">
-                        <Link to={"/"} className="header__link">
+                        <Link to={"/melody-mastermind/"} className="header__link">
                             Playlists
                         </Link>
                     </li>
                     <li className="header__item">
-                        <Link to={"/leaderboards"} className="header__link">
+                        <Link to={"/melody-mastermind/leaderboards"} className="header__link">
                             Leaderboards
                         </Link>
                     </li>
                     <li className="header__item">
-                        <Link to={"/account"} className="header__link">
+                        <Link to={"/melody-mastermind/account"} className="header__link">
                             Account
                         </Link>
                     </li>

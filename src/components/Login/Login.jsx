@@ -85,7 +85,7 @@ export function Login() {
 
         //make request to server for a guest account
         try {
-            const response = await axios.post(`${backendUrl}/api/account/guest`)
+            const response = await axios.post(`${backendUrl}/melody-mastermind/api/account/guest`)
             console.log(response)
 
             //server will send back a JWT for guest to use
@@ -138,7 +138,7 @@ export function Login() {
                 </section>
 
                 <section className="signup">
-                    <Link to={"/signup"}>
+                    <Link to={"/melody-mastermind/signup"}>
                         <button className="signup__button">
                             Sign Up
                         </button>

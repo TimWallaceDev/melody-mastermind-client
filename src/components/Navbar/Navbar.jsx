@@ -12,21 +12,21 @@ export function Navbar() {
             <ul className="navbar__items">
 
                 <li className="navbar__item">
-                    <Link to={"/"} className="navbar__link">
+                    <Link to={"/melody-mastermind/"} className="navbar__link">
                         <img className="navbar__icon" src={home} alt="home icon" />
                         <span className="navbar__text">Playlists</span>
                     </Link>
                 </li>
 
                 <li className="navbar__item">
-                    <Link to={"/leaderboards"} className="navbar__link">
+                    <Link to={"/melody-mastermind/leaderboards"} className="navbar__link">
                         <img className="navbar__icon" src={leaderboard} alt="leaderboard icon" />
                         <span className="navbar__text"> Leaderboards</span>
                     </Link>
                 </li>
 
                 <li className="navbar__item">
-                    <Link to={`/account`} className="navbar__link">
+                    <Link to={`/melody-mastermind/account`} className="navbar__link">
                         <img className="navbar__icon" src={account} alt="account icon" />
                         <span className="navbar__text">Account</span>
                     </Link>
