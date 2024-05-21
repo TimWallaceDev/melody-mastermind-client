@@ -158,11 +158,11 @@ export function Game({ token }) {
                     const currentScore = { id: uuid(), username, score: score, playlist_id: playlistId }
                     setCurrentScore(currentScore)
 
-                    //scroll to bottom
-                    window.scrollTo({
-                        top: document.documentElement.scrollHeight,
-                        behavior: 'smooth' // Optional: smooth scrolling animation
-                    });
+                    // //scroll to bottom
+                    // window.scrollTo({
+                    //     top: document.documentElement.scrollHeight,
+                    //     behavior: 'smooth' // Optional: smooth scrolling animation
+                    // });
 
                 } catch (err) {
                     console.log(err)
@@ -233,11 +233,11 @@ export function Game({ token }) {
             //show modal with next button
             modalRef.current.style.display = "block"
 
-            //scroll to bottom
-            window.scrollTo({
-                top: document.documentElement.scrollHeight,
-                behavior: 'smooth' // Optional: smooth scrolling animation
-            });
+            // //scroll to bottom
+            // window.scrollTo({
+            //     top: document.documentElement.scrollHeight,
+            //     behavior: 'smooth' // Optional: smooth scrolling animation
+            // });
 
         }
         else {
@@ -264,11 +264,11 @@ export function Game({ token }) {
                 const currentScore = { id: uuid(), username, score: score, playlist_id: playlistId }
                 setCurrentScore(currentScore)
 
-                //scroll to bottom
-                window.scrollTo({
-                    top: document.documentElement.scrollHeight,
-                    behavior: 'smooth' // Optional: smooth scrolling animation
-                });
+                // //scroll to bottom
+                // window.scrollTo({
+                //     top: document.documentElement.scrollHeight,
+                //     behavior: 'smooth' // Optional: smooth scrolling animation
+                // });
 
             } catch (err) {
                 console.log(err)
@@ -305,11 +305,11 @@ export function Game({ token }) {
                     const currentScore = { id: uuid(), username, score: score, playlist_id: playlistId }
                     setCurrentScore(currentScore)
 
-                    //scroll to bottom
-                    window.scrollTo({
-                        top: document.documentElement.scrollHeight,
-                        behavior: 'smooth' // Optional: smooth scrolling animation
-                    });
+                    // //scroll to bottom
+                    // window.scrollTo({
+                    //     top: document.documentElement.scrollHeight,
+                    //     behavior: 'smooth' // Optional: smooth scrolling animation
+                    // });
 
                 } catch (err) {
                     console.log(err)
