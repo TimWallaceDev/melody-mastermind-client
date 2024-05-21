@@ -129,6 +129,8 @@ export function Login() {
                     </form>
                 </section>
 
+                <span className="login__or">Or</span>
+
                 <section className="guest">
                     <form className="guest__form" onSubmit={handleGuest}>
                         <button className="guest__button">
@@ -137,11 +139,13 @@ export function Login() {
                     </form>
                 </section>
 
-                <section className="signup">
+                <section className="signup-button-wrapper">
+                    <p className="signup-button-wrapper__or">Don't Have an Account?</p>
                     <Link to={"/melody-mastermind/signup"}>
-                        <button className="signup__button">
+                        {/* <button className="signup__button">
                             Sign Up
-                        </button>
+                        </button> */}
+                        <p className="signup-button-wrapper__link">Sign up Here</p>
                     </Link>
 
                 </section>

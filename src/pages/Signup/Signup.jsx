@@ -147,10 +147,10 @@ export function Signup() {
 
                 <span className="create-account__message" ref={passwordMessageRef}>{passwordMessage}</span>
                 <label htmlFor="signup__password" className="signup__label">Password</label>
-                <input onChange={handlePasswordChange} value={password} type="text" id="signup__password" className="signup__password" placeholder="choose password" />
+                <input onChange={handlePasswordChange} value={password} type="password" id="signup__password" className="signup__password" placeholder="choose password" />
 
                 <label htmlFor="signup__password--confirm" className="signup__label">Confirm Password</label>
-                <input onChange={handlePasswordConfirmChange} value={passwordConfirm} type="text" id="signup-password--confirm" className="signup__password signup__password--confirm" placeholder="confirm password" />
+                <input onChange={handlePasswordConfirmChange} value={passwordConfirm} type="password" id="signup-password--confirm" className="signup__password signup__password--confirm" placeholder="confirm password" />
 
                 <button className="signup__button">Create Account</button>
 

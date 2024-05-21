@@ -6,7 +6,7 @@ import { Game } from './pages/Game/Game';
 import { Navbar } from './components/Navbar/Navbar';
 import { Header } from './components/Header/Header';
 import { Account } from './pages/Account/Account';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HashRouter, Routes, Route } from 'react-router-dom';
 import { Leaderboards } from './pages/Leaderboards/Leaderboards';
 import { Signup } from './pages/Signup/Signup';
 import { Login } from './components/Login/Login';
@@ -39,7 +39,7 @@ if (!token) {
 
 return (
   <>
-    <BrowserRouter>
+    <HashRouter>
       <Header/>
       <Navbar />
       <Routes>
@@ -50,7 +50,7 @@ return (
         <Route path={"/melody-mastermind/leaderboards"} element={<Leaderboards/>}/>
         <Route path={"/melody-mastermind/account"} element={<Account />}/>
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   </>
 )
 }

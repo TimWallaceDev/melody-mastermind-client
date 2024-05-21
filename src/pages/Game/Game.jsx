@@ -38,7 +38,7 @@ export function Game({ token }) {
     const [incorrectAnswer, setIncorrectAnswer] = useState(null)
     //timer state
     const [startTime, setStartTime] = useState()
-    const [endTime, setEndTime] = useState()
+    const [points, setPoints] = useState()
 
 
     const modalRef = useRef()
@@ -213,11 +213,13 @@ export function Game({ token }) {
             setAnswerCorrect(true)
 
             //calculate time
-            let time = 3000 - Math.floor((endTime - startTime) / 10)
+            let time = 1000 - Math.floor((endTime - startTime) / 30)
             if (time < 0){
                 time = 0
             }
-            console.log(time)
+            
+            //save points to state
+            setPoints(time)
 
             //add current score to leaderboard
             const username = localStorage.getItem("username")
@@ -391,7 +393,11 @@ export function Game({ token }) {
                         })}
                     </div>
                     <div className="game__modal" ref={modalRef}>
-                        {!gameOver && <button className="game__modal-button game__modal-button--next" onClick={handleNext}>Next Song</button>}
+                        {!gameOver && 
+                        <>
+                        <div className="game__points">+ {points} Points</div>
+                        <button className="game__modal-button game__modal-button--next" onClick={handleNext}>Next Song</button>
+                        </>}
                         
                         {(gameOver && gameWon) && <h2>You beat the Game!</h2>}
                         {gameOver &&
