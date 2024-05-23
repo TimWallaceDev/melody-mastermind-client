@@ -1,7 +1,7 @@
 
 
 
-export function scrollToNext() {
+export function scrollToNext(additionalOffset = 0) {
   const element = document.getElementById('modal');
   const offset = 120; // Extra offset for the fixed navbar
 
@@ -12,7 +12,7 @@ export function scrollToNext() {
   const absoluteElementTop = elementRect.top + window.pageYOffset;
 
   // Calculate the target scroll position
-  const scrollPosition = absoluteElementTop - window.innerHeight + elementRect.height + offset;
+  const scrollPosition = absoluteElementTop - window.innerHeight + elementRect.height + offset + additionalOffset;
 
   // Scroll to the calculated position with smooth behavior
   window.scrollTo({

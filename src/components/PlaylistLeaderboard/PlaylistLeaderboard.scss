@@ -28,7 +28,7 @@
             justify-content: center;
             align-items: center;
             margin: 0;
-            width: 50px;
+            width: 100px;
             border-right: 1px solid $leaderboard-gray;
         }
 
@@ -75,10 +75,6 @@
         width: 400px;
     }
 
-    &--current {
-        background-color: white;
-        color: black
-    }
 
     &__index {
         width: 100px;
@@ -87,7 +83,6 @@
         display: flex;
         align-items: center;
         justify-content: center;
-
         border-right: 1px solid $leaderboard-gray;
 
         &--heading {
@@ -108,6 +103,11 @@
         &--bronze {
             background-color: #cd7f32;
             color: black;
+        }
+
+        &--current {
+            background-color: white;
+            color: black
         }
     }
     

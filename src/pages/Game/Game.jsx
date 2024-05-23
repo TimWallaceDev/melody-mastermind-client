@@ -14,8 +14,8 @@ import { DesktopNavbar } from "../../components/DesktopNavbar/DesktopNavbar"
 //styles
 import "./Game.scss"
 
-
 export function Game({ token }) {
+    
     //backend request url
     const backendUrl = import.meta.env.VITE_BACKEND_URL
     //current playlist ID
@@ -40,6 +40,7 @@ export function Game({ token }) {
     const [buttonsDisabled, setDisabled] = useState(false)
     const [answerCorrect, setAnswerCorrect] = useState(false)
     const [incorrectAnswer, setIncorrectAnswer] = useState(null)
+    const [isOutOfTime, setIsOutOfTime] = useState(false)
     //timer state
     const [startTime, setStartTime] = useState()
     const [points, setPoints] = useState()
@@ -149,27 +150,7 @@ export function Game({ token }) {
                 setGameWon(true)
                 modalRef.current.style.display = "block"
 
-                //post score to scores
-                //username, score, playlistId, userid
-                const username = localStorage.getItem("username")
-                const params = { username, score, playlist_id: playlistId }
-                try {
-                    const response = await axios.post(`${backendUrl}/melody-mastermind/api/scores`, params)
-
-                    //add current score to leaderboard
-                    const username = localStorage.getItem("username")
-                    const currentScore = { id: uuid(), username, score: score, playlist_id: playlistId }
-                    setCurrentScore(currentScore)
-
-                    //scroll to top
-                    window.scrollTo({
-                        top: document.documentElement.scrollHeight,
-                        behavior: 'smooth' // Optional: smooth scrolling animation
-                    });
-
-                } catch (err) {
-                    console.log(err)
-                }
+                postScoreToServer()
             }
         }
 
@@ -252,27 +233,7 @@ export function Game({ token }) {
             setGameOver(true)
             modalRef.current.style.display = "block"
 
-            //post score to scores
-            //username, score, playlistId, userid
-            const username = localStorage.getItem("username")
-            const params = { username, score, playlist_id: playlistId }
-            try {
-                const response = await axios.post(`${backendUrl}/melody-mastermind/api/scores`, params)
-
-                //add current score to leaderboard
-                const username = localStorage.getItem("username")
-                const currentScore = { id: uuid(), username, score: score, playlist_id: playlistId }
-                setCurrentScore(currentScore)
-
-                //scroll to bottom
-                window.scrollTo({
-                    top: document.documentElement.scrollHeight,
-                    behavior: 'smooth' // Optional: smooth scrolling animation
-                });
-
-            } catch (err) {
-                console.log(err)
-            }
+            postScoreToServer()
         }
     }
 
@@ -293,27 +254,7 @@ export function Game({ token }) {
                 setGameWon(true)
                 modalRef.current.style.display = "block"
 
-                //post score to scores
-                //username, score, playlistId, userid
-                const username = localStorage.getItem("username")
-                const params = { username, score, playlist_id: playlistId }
-                try {
-                    const response = await axios.post(`${backendUrl}/melody-mastermind/api/scores`, params)
-
-                    //add current score to leaderboard
-                    const username = localStorage.getItem("username")
-                    const currentScore = { id: uuid(), username, score: score, playlist_id: playlistId }
-                    setCurrentScore(currentScore)
-
-                    //scroll to bottom
-                    window.scrollTo({
-                        top: document.documentElement.scrollHeight,
-                        behavior: 'smooth' // Optional: smooth scrolling animation
-                    });
-
-                } catch (err) {
-                    console.log(err)
-                }
+                postScoreToServer()
             }
 
             //enable buttons
@@ -327,10 +268,43 @@ export function Game({ token }) {
         }
     }
 
+    function outOfTime() {
+        setIsOutOfTime(true)
+        setGameOver(true)
+        postScoreToServer()
+        //show modal with next button
+        modalRef.current.style.display = "block"
+        //scroll next next button
+        scrollToNext(150)
+    }
+
+    async function postScoreToServer() {
+        //post score to scores
+        //username, score, playlistId, userid
+        const username = localStorage.getItem("username")
+        const params = { username, score, playlist_id: playlistId }
+        try {
+            const response = await axios.post(`${backendUrl}/melody-mastermind/api/scores`, params)
+
+            //add current score to leaderboard
+            const username = localStorage.getItem("username")
+            const currentScore = { id: uuid(), username, score: score, playlist_id: playlistId }
+            setCurrentScore(currentScore)
+
+            //scroll to bottom
+            window.scrollTo({
+                top: document.documentElement.scrollHeight,
+                behavior: 'smooth' // Optional: smooth scrolling animation
+            });
+
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
     if (!playlistTracks || !answers || !currentTrack) {
         return <h1>Loading</h1>
     }
-
 
     return (
         <>
@@ -352,6 +326,7 @@ export function Game({ token }) {
                                 autoPlay
                                 controls
                                 crossOrigin="anonymous"
+                                onEnded={outOfTime}
                             ></audio>
                             <AudioSpectrum
                                 className="audio__visualizer"
@@ -390,6 +365,7 @@ export function Game({ token }) {
                                 </>}
 
                             {(gameOver && gameWon) && <h2>You beat the Game!</h2>}
+                            {(gameOver && isOutOfTime) && <h2>Out of Time!</h2>}
                             {gameOver &&
                                 <>
                                     <h2 className="game__final-score">Final Score: {score.toLocaleString()}</h2>
@@ -402,7 +378,6 @@ export function Game({ token }) {
                         </div>
                     </div>
 
-
                     <div className="game__right-wrapper">
                         <div className="game__left">
                             <div className="game__information--left">
@@ -414,10 +389,7 @@ export function Game({ token }) {
                         </div>
                     </div>
 
-
                 </section>
-
-
             </main>
         </>
     )
