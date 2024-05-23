@@ -1,0 +1,55 @@
+@use "../../styles/partials/mixins" as *;
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    padding: 16px 16px;
+
+    @include tablet {
+        padding: 16px 64px;
+    }
+
+    @include desktop {
+        padding: 16px 128px;
+    }
+
+    &__brand-link {
+        text-decoration: none;
+    }
+
+    &__brand {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+    }
+
+    &__logo {
+        height: 30px;
+        border-radius: 4px;
+    }
+
+    &__name {
+        text-align: left;
+        color: green;
+        font-size: 0.9rem;
+    }
+
+
+    &__items {
+        display: none;
+        gap: 32px;
+
+        @include desktop {
+            display: flex;
+        }
+    }
+
+    &__item {
+        list-style-type: none;
+    }
+    
+    &__link {
+        text-decoration: none;
+
+    }
+}

@@ -1,0 +1,137 @@
+@use "../../styles/partials/mixins" as *;
+
+.login {
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 16px;
+
+    &__wrapper {
+        background-color: rgb(00, 00, 00);
+        border-radius: 4px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 16px 0;
+        }
+
+    &__brand {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 32px 0;
+    }
+
+    &__logo {
+        height: 100px;
+        border-radius: 4px;
+    }
+
+    &__name {
+        text-align: left;
+        color: green;
+        font-size: 2rem;
+    }
+
+    &__heading {
+        justify-self: flex-start;
+    }
+
+    &__message {
+        color: red;
+        font-weight: bold;
+    }
+
+
+}
+
+.login {
+    width: 100%;
+    @include tablet {
+        width: auto;
+    
+    }
+    &__form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+
+        @include tablet {
+            width: auto;
+        }
+    }
+
+    &__label {
+        background-color: transparent;
+        align-self: flex-start;
+        padding: 16px;
+        color: gray;
+        font-size: 0.8rem;
+
+        @include tablet {
+            align-self: center;
+            width: 300px;
+        }
+    }
+
+    &__input {
+        @include input;
+    }
+
+    &__submit {
+        @include button--primary;
+        margin-top: 32px;
+    }
+
+    &__or {
+        margin-top: 16px;
+    }
+}
+
+
+.guest {
+    width: 100%;
+
+    @include tablet {
+        width: auto;
+    }
+
+    &__form {
+        width: 100%;
+
+        @include tablet {
+            width: auto;
+        }
+    }
+
+    &__button {
+        background-color: gray;
+        width: 100%;
+        padding: 16px 32px;
+        color: white;
+        border-radius: 30px;
+        font-size: 1.1rem;
+        margin-top: 16px;
+        border: none;
+
+        @include tablet {
+            width: 300px
+        }
+    }
+}
+
+.signup-button-wrapper {
+    display: flex;
+    flex-direction: column;
+    margin-top: 16px;
+    width: 100%;
+
+    &__button {
+        min-width: 210px;
+    }
+
+    &__link {
+        margin-top: 0
+    }
+}
