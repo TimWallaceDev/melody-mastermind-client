@@ -15,7 +15,7 @@
 
     &__heading {
         text-align: left;
-        font-weight: 200;
+        font-weight: 700;
     }
 
     &__headings {
@@ -41,9 +41,22 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            width: 50px;
+            width: 100px;
             margin: 0;
             border-right: 1px solid $leaderboard-gray;
+        }
+    }
+
+    &__scores {
+        width: 100%;
+    }
+
+    &__name {
+        text-transform: capitalize;
+
+        @include tablet {
+            width: 400px;
+            text-align: left;
         }
     }
 
@@ -56,6 +69,11 @@
     border: 1px solid rgb(48, 47, 47);
     flex: 1;
     font-size: 1.1rem;
+    width: 100%;
+
+    @include tablet {
+        width: 400px;
+    }
 
     &--current {
         background-color: white;
@@ -63,29 +81,56 @@
     }
 
     &__index {
-        width: 50px;
+        width: 100px;
         background-color: rgb(57, 6, 55);
         margin: 0;
         display: flex;
         align-items: center;
         justify-content: center;
+
         border-right: 1px solid $leaderboard-gray;
+
+        &--heading {
+            font-weight: 700;
+            background-color: black;
+        }
+
+        &--gold {
+            background-color: gold;
+            color: black;
+        }
+
+        &--silver {
+            background-color: silver;
+            color: black;
+        }
+
+        &--bronze {
+            background-color: #cd7f32;
+            color: black;
+        }
     }
     
     &__score {
-        width: 50px;
+        width: 100px;
         margin: 0;
-        text-align: center;
         display: flex;
         align-items: center;
-        justify-content: center;
+        justify-content: flex-start;
+        padding-left: 16px;
         border-right: 1px solid rgb(77, 74, 74);
+        font-size: 1.1rem;
+        font-weight: 500;
+
 
         &--current {
             background-color: white;
             color: black;
         }
 
+        &--heading {
+            font-weight: 700;
+        }
     }
 
     &__username {
@@ -93,10 +138,15 @@
         margin: 0;
         text-align: left;
         padding: 8px 16px;
+        font-weight: 500;
 
         &--current {
             background-color: white;
             color: black;
+        }
+        
+        &--heading {
+            font-weight: 700;
         }
     }
 }

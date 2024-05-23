@@ -2,6 +2,8 @@ import "./Account.scss"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
+import { MobileNavbar } from "../../components/MobileNavbar/MobileNavbar"
+import { DesktopNavbar } from "../../components/DesktopNavbar/DesktopNavbar"
 
 export function Account() {
 
@@ -41,6 +43,9 @@ export function Account() {
     }
 
     return (
+        <>
+        <MobileNavbar/>
+        <DesktopNavbar/>
         <section className="account">
             <h1 className="account__greeting">Hello, <span className="account__username">{information.username}</span></h1>
             <div className="account__informations">
@@ -51,7 +56,7 @@ export function Account() {
                 </span>
                 <span className="account__information">
                     <span className="account__information-label">Top Score: </span>
-                    <span className="account__information-info">{information.highest_score}</span>
+                    <span className="account__information-info">{information.highest_score.toLocaleString()}</span>
                 </span>
                 <span className="account__information">
                     <span className="account__information-label">Best Playlist: </span>
@@ -68,5 +73,6 @@ export function Account() {
             </div>
 
         </section>
+        </>
     )
 }

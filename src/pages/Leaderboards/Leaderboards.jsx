@@ -2,14 +2,16 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import "./Leaderboards.scss"
 import axios from "axios"
+import { MobileNavbar } from "../../components/MobileNavbar/MobileNavbar"
+import { DesktopNavbar } from "../../components/DesktopNavbar/DesktopNavbar"
 
 export function Leaderboards() {
 
     const backendUrl = import.meta.env.VITE_BACKEND_URL
-    
+
     const [scores, setScores] = useState(null)
 
-    const[username] = useState(localStorage.getItem("JWT"))
+    const [username] = useState(localStorage.getItem("JWT"))
 
     const [playlistData, setPlaylistData] = useState(null)
 
@@ -23,7 +25,7 @@ export function Leaderboards() {
             setPlaylistData(response.data.playlists)
         }
         //if no username, redirect home
-        if (!username){
+        if (!username) {
             navigate("/")
         }
         getScores()
@@ -72,15 +74,28 @@ export function Leaderboards() {
 
                     <div className="leaderboard__scores">
                         <div className="score">
-                            <h4 className="score__index">Rank</h4>
-                            <h5 className="score__score">Score</h5>
-                            <h4 className="score__username">Username</h4>
+                            <h4 className="score__index score__index--heading">Rank</h4>
+                            <h5 className="score__score score__score--heading">Score</h5>
+                            <h4 className="score__username score__username--heading">Username</h4>
                         </div>
                         {playlist.scores.map((score, index) => {
+                            let className = "score__index"
+                            switch (index) {
+                                case 0:
+                                    className += " score__index--gold"
+                                    break;
+                                case 1:
+                                    className += " score__index--silver"
+                                    break;
+                                case 2:
+                                    className += " score__index--bronze"
+                                    break;
+                            }
+
                             return (
                                 <div key={score.id} className="score">
-                                    <h4 className="score__index">{index + 1}</h4>
-                                    <h4 className="score__score">{score.score}</h4>
+                                    <h4 className={className}>{index + 1}</h4>
+                                    <h4 className="score__score">{score.score.toLocaleString()}</h4>
                                     <h4 className="score__username">{score.username}</h4>
                                 </div>
                             )
@@ -89,19 +104,21 @@ export function Leaderboards() {
                 </article>
             tables.push(board)
         }
-
     }
 
     sortScores()
 
 
     return (
-
-        <section className="leaderboards">
-            <h1>Leaderboards</h1>
-            <div className="leaderboards__wrapper">
-                {tables}
-            </div>
-        </section>
+        <>
+            <DesktopNavbar />
+            <MobileNavbar />
+            <section className="leaderboards">
+                <h1>Leaderboards</h1>
+                <div className="leaderboards__wrapper">
+                    {tables}
+                </div>
+            </section>
+        </>
     )
 }

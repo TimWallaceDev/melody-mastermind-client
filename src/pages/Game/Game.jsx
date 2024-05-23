@@ -3,23 +3,26 @@ import { useEffect, useState, useRef } from "react"
 import { useParams } from 'react-router-dom'
 import axios from "axios"
 import { v4 as uuid } from "uuid"
+import { handleGoHome, handlePlayAgain } from "../../utils/gameUtils"
 //components
 import { PlaylistLeaderboard } from "../../components/PlaylistLeaderboard/PlaylistLeaderboard"
 import AudioSpectrum from "react-audio-spectrum"
 import { Countdown } from "../../components/Countdown/Countdown"
 import { scrollToNext } from "../../utils/gameUtils"
+import { MobileNavbar } from "../../components/MobileNavbar/MobileNavbar"
+import { DesktopNavbar } from "../../components/DesktopNavbar/DesktopNavbar"
 //styles
 import "./Game.scss"
 
 
 export function Game({ token }) {
+    //backend request url
     const backendUrl = import.meta.env.VITE_BACKEND_URL
-
+    //current playlist ID
     const { playlistId } = useParams()
     //scores for the leaderboard
     const [scores, setScores] = useState(null)
     const [currentScore, setCurrentScore] = useState(null)
-
     //save all tracks from the playlist
     const [playlistTracks, setPlaylistTracks] = useState(null)
     const [playlistImg, setPlaylistImg] = useState(null)
@@ -41,10 +44,9 @@ export function Game({ token }) {
     const [startTime, setStartTime] = useState()
     const [points, setPoints] = useState()
 
-
     const modalRef = useRef()
 
-    //get playlist tracks and set playlistTracks
+    //get playlist tracks and save in state
     useEffect(() => {
         //get tracks from playlist
         async function getPlaylistTracks(playlistId) {
@@ -79,6 +81,14 @@ export function Game({ token }) {
         getPlaylistTracks(playlistId)
 
     }, [])
+
+    //setup game once tracks are present
+    useEffect(() => {
+        if (!playlistTracks) {
+            return
+        }
+        setupGame()
+    }, [playlistTracks])
 
     function setupGame() {
         nextSong()
@@ -119,14 +129,6 @@ export function Game({ token }) {
         }
         return trackIndices
     }
-
-    //setup game once tracks are present
-    useEffect(() => {
-        if (!playlistTracks) {
-            return
-        }
-        setupGame()
-    }, [playlistTracks])
 
     async function nextSong() {
         //hide correct answer
@@ -325,101 +327,98 @@ export function Game({ token }) {
         }
     }
 
-    //resets game to beginning
-    function handlePlayAgain() {
-        window.location.reload()
-    }
-
-    //takes user to home page
-    function handleGoHome() {
-        window.history.back()
-    }
-
-
     if (!playlistTracks || !answers || !currentTrack) {
         return <h1>Loading</h1>
     }
 
+
     return (
-        <main className="game">
-            <section className="game__container">
-                <div className="game__information">
-                    <img className="game__image" src={playlistImg}></img>
-                    <h2 className="game__playlist-name">{playlistName}</h2>
-                </div>
-                <div className="game__main">
-                    <h3 className="game__score" id="game__score">Score: {score}</h3>
-                    <div className="audio">
-                        <audio
-                            className="audio__player"
-                            id="audio"
-                            src={currentTrack.track.preview_url}
-                            autoPlay
-                            controls
-                            crossOrigin="anonymous"
-                        ></audio>
-                        <AudioSpectrum
-                            className="audio__visualizer"
-                            id="audio-canvas"
-                            height={200}
-                            width={300}
-                            audioId={'audio'}
-                            capColor={'red'}
-                            capHeight={2}
-                            meterWidth={12}
-                            meterCount={200}
-                            meterColor={[
-                                { stop: 0, color: 'purple' },
-                                { stop: 0.5, color: 'green' },
-                                { stop: 1, color: 'red' }
-                            ]}
-                            gap={4}
-                        />
-
+        <>
+            <DesktopNavbar />
+            <MobileNavbar />
+            <main className="game">
+                <section className="game__container">
+                    <div className="game__information">
+                        <img className="game__image" src={playlistImg}></img>
+                        <h2 className="game__playlist-name">{playlistName}</h2>
                     </div>
-                    <Countdown length={30} track={currentTrackIndex} />
-                    <div className="game__answers">
-                        {/* display answer buttons using answers state */}
-                        {answers.map(answer => {
-                            const trackName = playlistTracks[answer].track.name
-                            return (
-                                <button className={` ${gameOver && trackName === currentTrack.track.name || answerCorrect && trackName === currentTrack.track.name ? "game__button game__button--correct" : " game__button"} ${incorrectAnswer === trackName ? "game__button--incorrect" : ""}`} disabled={buttonsDisabled} key={Math.random() * 999999} onClick={(event) => handleAnswer(event, trackName)}>{trackName}</button>
-                            )
-                        })}
-                    </div>
-                    <div className="game__modal" ref={modalRef} id="modal">
-                        {!gameOver &&
-                            <>
-                                <div className="game__points">+ {points} Points</div>
-                                <button className="game__modal-button game__modal-button--next" onClick={handleNext}>Next Song</button>
-                            </>}
+                    <div className="game__main">
+                        <h3 className="game__score" id="game__score">Score: {score.toLocaleString()}</h3>
+                        <div className="audio">
+                            <audio
+                                className="audio__player"
+                                id="audio"
+                                src={currentTrack.track.preview_url}
+                                autoPlay
+                                controls
+                                crossOrigin="anonymous"
+                            ></audio>
+                            <AudioSpectrum
+                                className="audio__visualizer"
+                                id="audio-canvas"
+                                height={200}
+                                width={300}
+                                audioId={'audio'}
+                                capColor={'red'}
+                                capHeight={2}
+                                meterWidth={12}
+                                meterCount={200}
+                                meterColor={[
+                                    { stop: 0, color: 'purple' },
+                                    { stop: 0.5, color: 'green' },
+                                    { stop: 1, color: 'red' }
+                                ]}
+                                gap={4}
+                            />
 
-                        {(gameOver && gameWon) && <h2>You beat the Game!</h2>}
-                        {gameOver &&
-                            <div className="game__end-options">
-                                <button className="game__modal-button game__modal-button--play-again" onClick={handlePlayAgain}>Play Again</button>
-                                <button className="game__modal-button game__modal-button--playlists" onClick={handleGoHome}>Playlists</button>
-                            </div>
-                        }
-                    </div>
-                </div>
-
-
-                <div className="game__right-wrapper">
-                    <div className="game__left">
-                        <div className="game__information--left">
-                            <img className="game__image" src={playlistImg}></img>
-                            <h2 className="game__playlist-name">{playlistName}</h2>
                         </div>
+                        <Countdown length={30} track={currentTrackIndex} />
+                        <div className="game__answers">
+                            {/* display answer buttons using answers state */}
+                            {answers.map(answer => {
+                                const trackName = playlistTracks[answer].track.name
+                                return (
+                                    <button className={` ${gameOver && trackName === currentTrack.track.name || answerCorrect && trackName === currentTrack.track.name ? "game__button game__button--correct" : " game__button"} ${incorrectAnswer === trackName ? "game__button--incorrect" : ""}`} disabled={buttonsDisabled} key={Math.random() * 999999} onClick={(event) => handleAnswer(event, trackName)}>{trackName}</button>
+                                )
+                            })}
+                        </div>
+                        <div className="game__modal" ref={modalRef} id="modal">
+                            {!gameOver &&
+                                <>
+                                    <div className="game__points">+ {points} Points</div>
+                                    <button className="game__modal-button game__modal-button--next" onClick={handleNext}>Next Song</button>
+                                </>}
 
-                        <PlaylistLeaderboard scores={scores} currentScore={currentScore} />
+                            {(gameOver && gameWon) && <h2>You beat the Game!</h2>}
+                            {gameOver &&
+                                <>
+                                    <h2 className="game__final-score">Final Score: {score.toLocaleString()}</h2>
+                                    <div className="game__end-options">
+                                        <button className="game__modal-button game__modal-button--play-again" onClick={handlePlayAgain}>Play Again</button>
+                                        <button className="game__modal-button game__modal-button--playlists" onClick={handleGoHome}>Playlists</button>
+                                    </div>
+                                </>
+                            }
+                        </div>
                     </div>
-                </div>
 
 
-            </section>
+                    <div className="game__right-wrapper">
+                        <div className="game__left">
+                            <div className="game__information--left">
+                                <img className="game__image" src={playlistImg}></img>
+                                <h2 className="game__playlist-name">{playlistName}</h2>
+                            </div>
+
+                            <PlaylistLeaderboard scores={scores} currentScore={currentScore} />
+                        </div>
+                    </div>
 
 
-        </main>
+                </section>
+
+
+            </main>
+        </>
     )
 }
