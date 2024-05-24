@@ -189,7 +189,6 @@ export function Game({ token }) {
 
     //sets up next question
     async function handleNext() {
-        console.log("next!")
         if (!gameOver) {
             //choose the next song
             setCurrentTrackIndex(currentTrackIndex + 1)
@@ -208,7 +207,6 @@ export function Game({ token }) {
             //play audio
             try {
                 await audioRef.current.play()
-                console.log("audio should be playing now")
             } catch (err) {
                 console.log(err)
             }
