@@ -15,7 +15,7 @@ import { DesktopNavbar } from "../../components/DesktopNavbar/DesktopNavbar"
 import "./Game.scss"
 
 export function Game({ token }) {
-    
+
     //backend request url
     const backendUrl = import.meta.env.VITE_BACKEND_URL
     //current playlist ID
@@ -46,6 +46,8 @@ export function Game({ token }) {
     const [points, setPoints] = useState()
 
     const modalRef = useRef()
+    const audioRef = useRef()
+    const startGameModalRef = useRef()
 
     //get playlist tracks and save in state
     useEffect(() => {
@@ -64,6 +66,7 @@ export function Game({ token }) {
 
                 //save tracks to state
                 setPlaylistTracks(response.data.tracks.items)
+
 
             } catch (err) {
                 console.error(err)
@@ -92,81 +95,28 @@ export function Game({ token }) {
     }, [playlistTracks])
 
     function setupGame() {
-        nextSong()
-        //set current track
+        //set current track index
+        chooseNextSong()
+        //set audio src
         setCurrentTrack(playlistTracks[currentTrackIndex])
-        //get 3 other answers
+        //set answers
         pickThreeRandomTracks()
-        //set buttons to answers
         setButtons()
-    }
-
-    //set buttons at random to the values of the 4 track titles
-    function setButtons() {
-        let trackIndices = pickThreeRandomTracks()
-        setAnswers(trackIndices)
-    }
-
-    //pick three other random songs from the playlist - make sure they are all unique
-    function pickThreeRandomTracks() {
-        //get the current tracks index
-        const trackIndices = [currentTrackIndex]
-        //continue adding to track index until 4 tracks are chosen
-        while (trackIndices.length < 4) {
-            let tmpIndex
-            //create a random number
-            do {
-                tmpIndex = Math.ceil(Math.random() * playlistTracks.length - 1)
-            }
-            //while tmpIndex is in index, keep generating new indexes
-            while (trackIndices.includes(tmpIndex))
-            trackIndices.push(tmpIndex)
-        }
-        //shuffle indices
-        for (let i = 0; i < 10; i++) {
-            let randomIndex = Math.floor(Math.random() * 4)
-            let randomSlice = trackIndices.splice(randomIndex, 1)
-            trackIndices.push(randomSlice[0])
-        }
-        return trackIndices
-    }
-
-    async function nextSong() {
         //hide correct answer
         setAnswerCorrect(false)
-
-        //check that track has preview url
-        const nextTrack = playlistTracks[currentTrackIndex]
-        if (!nextTrack.track.preview_url) {
-            //make sure the next track is not undefined
-            if (playlistTracks[currentTrackIndex + 1]) {
-                setCurrentTrackIndex(currentTrackIndex + 1)
-            }
-            else {
-                //end game
-
-                //if no, game is over. show modal with game over, with button back to home page
-                setGameOver(true)
-                setGameWon(true)
-                modalRef.current.style.display = "block"
-
-                postScoreToServer()
-            }
-        }
-
-        //set the track
-        setCurrentTrack(playlistTracks[currentTrackIndex])
-
-        //set the button
-        setButtons()
-
-        //start timer
-        startTimer()
+        //show start game modal
+        // startGameModalRef.current.style.display = "flex"
     }
 
-    function startTimer() {
-        const startTime = Date.now()
-        setStartTime(startTime)
+    function startGame(){
+        //hide modal
+        startGameModalRef.current.style.display = "none"
+        //start audio
+        audioRef.current.play()
+        //start timer
+        startTimer()
+        //trigger animation
+
     }
 
     //create useEffect runs when answer submitted
@@ -178,7 +128,7 @@ export function Game({ token }) {
         //hide modal
         modalRef.current.style.display = "none"
 
-        nextSong()
+        chooseNextSong()
 
     }, [currentTrackIndex])
 
@@ -239,9 +189,45 @@ export function Game({ token }) {
 
     //sets up next question
     async function handleNext() {
+        console.log("next!")
         if (!gameOver) {
             //choose the next song
+            setCurrentTrackIndex(currentTrackIndex + 1)
+            chooseNextSong()
 
+            //set the audio 
+            setCurrentTrack(playlistTracks[currentTrackIndex])
+            audioRef.current.autoplay = "true"
+
+            //enable buttons
+            setDisabled(false)
+
+            //hide correct answer
+            setAnswerCorrect(false)
+
+            //play audio
+            try {
+                await audioRef.current.play()
+                console.log("audio should be playing now")
+            }catch(err){
+                console.log(err)
+            }
+
+            //scroll to audio canvas
+            window.scrollTo({
+                top: document.getElementById("game__score").offsetTop - 16,
+                behavior: 'smooth' // Optional: smooth scrolling animation
+            });
+        }
+    }
+
+    // -----------------------------------------------   HELPER FUNCTIONS -----------------------------------------------------
+    
+    async function chooseNextSong() {
+
+        //check that track has preview url
+        const nextTrack = playlistTracks[currentTrackIndex]
+        if (!nextTrack.track.preview_url) {
             //make sure the next track is not undefined
             if (playlistTracks[currentTrackIndex + 1]) {
                 setCurrentTrackIndex(currentTrackIndex + 1)
@@ -253,29 +239,32 @@ export function Game({ token }) {
                 setGameOver(true)
                 setGameWon(true)
                 modalRef.current.style.display = "block"
-
                 postScoreToServer()
             }
-
-            //enable buttons
-            setDisabled(false)
-
-            //scroll to audio canvas
-            window.scrollTo({
-                top: document.getElementById("game__score").offsetTop - 16,
-                behavior: 'smooth' // Optional: smooth scrolling animation
-            });
         }
+
+        //set the track
+        setCurrentTrack(playlistTracks[currentTrackIndex])
+
+        //set the button
+        setButtons()
     }
 
     function outOfTime() {
-        setIsOutOfTime(true)
-        setGameOver(true)
-        postScoreToServer()
-        //show modal with next button
-        modalRef.current.style.display = "block"
-        //scroll next next button
-        scrollToNext(150)
+        if (!answerCorrect) {
+            setIsOutOfTime(true)
+            setGameOver(true)
+            postScoreToServer()
+            //show modal with next button
+            modalRef.current.style.display = "block"
+            //scroll next next button
+            scrollToNext(150)
+        }
+    }
+
+    function startTimer() {
+        const startTime = Date.now()
+        setStartTime(startTime)
     }
 
     async function postScoreToServer() {
@@ -302,6 +291,36 @@ export function Game({ token }) {
         }
     }
 
+    //set buttons at random to the values of the 4 track titles
+    function setButtons() {
+        let trackIndices = pickThreeRandomTracks()
+        setAnswers(trackIndices)
+    }
+
+    //pick three other random songs from the playlist - make sure they are all unique
+    function pickThreeRandomTracks() {
+        //get the current tracks index
+        const trackIndices = [currentTrackIndex]
+        //continue adding to track index until 4 tracks are chosen
+        while (trackIndices.length < 4) {
+            let tmpIndex
+            //create a random number
+            do {
+                tmpIndex = Math.ceil(Math.random() * playlistTracks.length - 1)
+            }
+            //while tmpIndex is in index, keep generating new indexes
+            while (trackIndices.includes(tmpIndex))
+            trackIndices.push(tmpIndex)
+        }
+        //shuffle indices
+        for (let i = 0; i < 10; i++) {
+            let randomIndex = Math.floor(Math.random() * 4)
+            let randomSlice = trackIndices.splice(randomIndex, 1)
+            trackIndices.push(randomSlice[0])
+        }
+        return trackIndices
+    }
+
     if (!playlistTracks || !answers || !currentTrack) {
         return <h1>Loading</h1>
     }
@@ -310,6 +329,9 @@ export function Game({ token }) {
         <>
             <DesktopNavbar />
             <MobileNavbar />
+            <div className="start-game-modal" ref={startGameModalRef}>
+                <button className="start-game-modal__button" onClick={startGame}>Start Game</button>
+            </div>
             <main className="game">
                 <section className="game__container">
                     <div className="game__information">
@@ -323,10 +345,11 @@ export function Game({ token }) {
                                 className="audio__player"
                                 id="audio"
                                 src={currentTrack.track.preview_url}
-                                autoPlay
                                 controls
                                 crossOrigin="anonymous"
                                 onEnded={outOfTime}
+                                ref={audioRef}
+                                onPlaying={startTimer}
                             ></audio>
                             <AudioSpectrum
                                 className="audio__visualizer"
@@ -347,7 +370,7 @@ export function Game({ token }) {
                             />
 
                         </div>
-                        <Countdown length={30} track={currentTrackIndex} />
+                        <Countdown length={30} track={currentTrackIndex} trigger={startTime}/>
                         <div className="game__answers">
                             {/* display answer buttons using answers state */}
                             {answers.map(answer => {

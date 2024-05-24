@@ -19,6 +19,14 @@
         animation: 30s progress linear;  
         animation-fill-mode: forwards;
     }
+
+    &__time {
+        margin-top: 16px;
+    }
+
+    &__message {
+        margin-top: 16px;
+    }
 }
 
 @keyframes progress {
