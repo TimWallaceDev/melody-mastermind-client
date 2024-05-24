@@ -32,7 +32,7 @@ export function Game({ token }) {
     //pick the first track. This is the current track that is the correct answer
     const [currentTrack, setCurrentTrack] = useState(null)
     //set the index of the current track. This keeps track of which track in the playlist we are currently at
-    const [currentTrackIndex, setCurrentTrackIndex] = useState(0)
+    const [currentTrackIndex, setCurrentTrackIndex] = useState(97)
     //this is the list of indices that will be used to set the answers
     const [answers, setAnswers] = useState()
     const [gameOver, setGameOver] = useState(false)
@@ -225,19 +225,21 @@ export function Game({ token }) {
 
         //check that track has preview url
         const nextTrack = playlistTracks[currentTrackIndex]
+        if (!nextTrack) {
+            //end game
+
+            //show modal with game over, with button back to home page
+            setGameOver(true)
+            setGameWon(true)
+            modalRef.current.style.display = "block"
+            postScoreToServer()
+            return
+        }
+
         if (!nextTrack.track.preview_url) {
             //make sure the next track is not undefined
             if (playlistTracks[currentTrackIndex + 1]) {
                 setCurrentTrackIndex(currentTrackIndex + 1)
-            }
-            else {
-                //end game
-
-                //if no, game is over. show modal with game over, with button back to home page
-                setGameOver(true)
-                setGameWon(true)
-                modalRef.current.style.display = "block"
-                postScoreToServer()
             }
         }
 
@@ -374,7 +376,7 @@ export function Game({ token }) {
                             />
 
                         </div>
-                        <Countdown length={30} track={currentTrackIndex} trigger={startTime} gameOver={gameOver} answerCorrect={answerCorrect}/>
+                        <Countdown length={30} track={currentTrackIndex} trigger={startTime} gameOver={gameOver} answerCorrect={answerCorrect} />
                         <div className="game__answers">
                             {/* display answer buttons using answers state */}
                             {answers.map(answer => {
