@@ -108,7 +108,7 @@ export function Game({ token }) {
         // startGameModalRef.current.style.display = "flex"
     }
 
-    function startGame(){
+    function startGame() {
         //hide modal
         startGameModalRef.current.style.display = "none"
         //start audio
@@ -209,7 +209,7 @@ export function Game({ token }) {
             try {
                 await audioRef.current.play()
                 console.log("audio should be playing now")
-            }catch(err){
+            } catch (err) {
                 console.log(err)
             }
 
@@ -222,7 +222,7 @@ export function Game({ token }) {
     }
 
     // -----------------------------------------------   HELPER FUNCTIONS -----------------------------------------------------
-    
+
     async function chooseNextSong() {
 
         //check that track has preview url
@@ -251,7 +251,7 @@ export function Game({ token }) {
     }
 
     function outOfTime() {
-        if (!answerCorrect) {
+        if (!answerCorrect && !gameOver) {
             setIsOutOfTime(true)
             setGameOver(true)
             postScoreToServer()
@@ -329,9 +329,15 @@ export function Game({ token }) {
         <>
             <DesktopNavbar />
             <MobileNavbar />
+
             <div className="start-game-modal" ref={startGameModalRef}>
+                <div className="start-game-modal__information">
+                    <img className="start-game-modal__image" src={playlistImg}></img>
+                    <h2 className="start-game-modal__playlist-name">{playlistName}</h2>
+                </div>
                 <button className="start-game-modal__button" onClick={startGame}>Start Game</button>
             </div>
+
             <main className="game">
                 <section className="game__container">
                     <div className="game__information">
@@ -370,7 +376,7 @@ export function Game({ token }) {
                             />
 
                         </div>
-                        <Countdown length={30} track={currentTrackIndex} trigger={startTime}/>
+                        <Countdown length={30} track={currentTrackIndex} trigger={startTime} gameOver={gameOver} answerCorrect={answerCorrect}/>
                         <div className="game__answers">
                             {/* display answer buttons using answers state */}
                             {answers.map(answer => {

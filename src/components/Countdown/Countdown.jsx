@@ -1,7 +1,7 @@
 import "./Countdown.scss"
 import { useRef, useEffect, useState } from "react"
 
-export function Countdown({ track, trigger }) {
+export function Countdown({ track, trigger, gameOver, answerCorrect }) {
 
     const countdownRef = useRef()
     const [runningOutOfTime, setRunningOutOfTime] = useState(false)
@@ -58,7 +58,7 @@ export function Countdown({ track, trigger }) {
             <div className="countdown">
                 <div className="countdown__progress" key={track} ref={countdownRef}></div>
             </div>
-            {runningOutOfTime &&
+            {(runningOutOfTime && !gameOver && !answerCorrect) &&
                 <>
                     <div className="countdown__time">{message}</div>
                     {/* {timeLeft < 4 && <div className="countdown__message">HURRY UP</div>} */}

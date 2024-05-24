@@ -8,8 +8,32 @@
     width: 100vw;
     height: 100vh;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: flex-end;
     align-items: center;
+    padding: 64px 16px;
+
+    @include tablet {
+        padding: 64px
+    }
+
+    &__information {
+        flex-grow: 1;
+    }
+
+    &__image {
+        width: 100%;
+
+        @include tablet {
+            max-width: 300px;
+        }
+    }
+
+    &__button {
+        @include button--primary;
+        margin-top: 64px;
+        margin-top: auto;
+    }
 }
 
 .game {
