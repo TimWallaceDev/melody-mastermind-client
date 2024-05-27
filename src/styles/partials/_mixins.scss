@@ -45,3 +45,18 @@
         width: 300px
     }
 }
+
+@mixin button--secondary {
+    background-color: white;
+    width: 100%;
+    padding: 16px 32px;
+    color: black;
+    border-radius: 30px;
+    font-size: 1.1rem;
+    margin-top: 16px;
+    border: none;
+
+    @include tablet {
+        width: 300px
+    }
+}

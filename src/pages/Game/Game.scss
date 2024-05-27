@@ -9,7 +9,7 @@
     height: 100vh;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
+    justify-content: center;
     align-items: center;
     padding: 64px 16px;
 
@@ -18,7 +18,7 @@
     }
 
     &__information {
-        flex-grow: 1;
+
     }
 
     &__image {
@@ -30,9 +30,8 @@
     }
 
     &__button {
-        @include button--primary;
+        @include button--secondary;
         margin-top: 64px;
-        margin-top: auto;
     }
 }
 

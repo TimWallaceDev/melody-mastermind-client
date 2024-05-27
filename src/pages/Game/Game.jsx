@@ -32,7 +32,7 @@ export function Game({ token }) {
     //pick the first track. This is the current track that is the correct answer
     const [currentTrack, setCurrentTrack] = useState(null)
     //set the index of the current track. This keeps track of which track in the playlist we are currently at
-    const [currentTrackIndex, setCurrentTrackIndex] = useState(97)
+    const [currentTrackIndex, setCurrentTrackIndex] = useState(0)
     //this is the list of indices that will be used to set the answers
     const [answers, setAnswers] = useState()
     const [gameOver, setGameOver] = useState(false)
@@ -104,19 +104,20 @@ export function Game({ token }) {
         setButtons()
         //hide correct answer
         setAnswerCorrect(false)
-        //show start game modal
-        // startGameModalRef.current.style.display = "flex"
+        //hide the scroll bar while modal is being displayed
+        document.body.style.overflow = "hidden"
     }
 
     function startGame() {
         //hide modal
         startGameModalRef.current.style.display = "none"
+        //show body overflow
+        document.body.style.overflow = "unset"
+        
         //start audio
         audioRef.current.play()
         //start timer
         startTimer()
-        //trigger animation
-
     }
 
     //create useEffect runs when answer submitted

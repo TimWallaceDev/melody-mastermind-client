@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom"
 import axios from "axios"
 import { MobileNavbar } from "../../components/MobileNavbar/MobileNavbar"
 import { DesktopNavbar } from "../../components/DesktopNavbar/DesktopNavbar"
+import { Instructions } from "../../components/Instructions/Instructions"
 
 export function Home() {
 
@@ -38,6 +39,7 @@ export function Home() {
         <>
         <DesktopNavbar/>
         <MobileNavbar/>
+        <Instructions/>
         <section className="home">
 
             <h1>Choose a Playlist</h1>
